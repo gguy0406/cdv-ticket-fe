@@ -1,8 +1,7 @@
 import type { NextAuthConfig, User } from 'next-auth';
 
-import { DEFAULT_USER_ROUTE } from '@/lib/constants';
-
 const loginRoute = '/login';
+const defaultUserRoute = '/users';
 const protectedRoutes = ['/users', '/customers', '/events'];
 
 export const authConfig = {
@@ -16,7 +15,7 @@ export const authConfig = {
       const isOnProtectedRoute = protectedRoutes.some((route) => nextUrl.pathname.startsWith(route));
 
       if (!isLoggedIn && isOnProtectedRoute) return false;
-      if (isLoggedIn && isOnLoginRoute) return Response.redirect(new URL(DEFAULT_USER_ROUTE, nextUrl));
+      if (isLoggedIn && isOnLoginRoute) return Response.redirect(new URL(defaultUserRoute, nextUrl));
 
       return true;
     },
@@ -33,9 +32,9 @@ export const authConfig = {
     },
     async redirect({ baseUrl, url }) {
       if (url.startsWith('/') && url !== loginRoute) return `${baseUrl}${url}`;
-      if (new URL(url).origin === baseUrl && new URL(url).pathname !== loginRoute) return url;
+      if (new URL(url).origin === baseUrl) return url;
 
-      return `${baseUrl}${DEFAULT_USER_ROUTE}`;
+      return `${baseUrl}${defaultUserRoute}`;
     },
   },
 } satisfies NextAuthConfig;
