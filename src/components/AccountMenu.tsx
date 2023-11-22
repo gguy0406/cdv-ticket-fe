@@ -14,9 +14,11 @@ import { User } from '@/interfaces/user';
 export default function AccountMenu({ user, logout }: { user: User; logout: typeof signOut }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event: BaseSyntheticEvent) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -39,6 +41,8 @@ export default function AccountMenu({ user, logout }: { user: User; logout: type
         open={open}
         onClose={handleClose}
         onClick={handleClose}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         slotProps={{
           paper: {
             elevation: 0,
@@ -61,8 +65,6 @@ export default function AccountMenu({ user, logout }: { user: User; logout: type
             },
           },
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <Link href="/users">
           <MenuItem>
