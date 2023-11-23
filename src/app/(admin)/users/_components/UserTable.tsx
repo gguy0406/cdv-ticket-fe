@@ -10,9 +10,11 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
+import { Customer } from '@/interfaces/customer';
 import { User, UserStatusEnum } from '@/interfaces/user';
 
 interface Props {
+  customers: Customer[];
   getUsers: () => Promise<User[]>;
 }
 
@@ -103,11 +105,11 @@ export default function UserTableBody({ getUsers }: Props) {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}
         page={page}
+        rowsPerPageOptions={[10, 25, 100]}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
         sx={{ overflow: 'visible' }}

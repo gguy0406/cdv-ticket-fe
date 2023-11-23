@@ -1,21 +1,23 @@
 import Box from '@mui/material/Box';
 
-import { User } from '@/interfaces/user';
-import { wrappedFetchWithJWT } from '@/lib/wrappedFetch';
+import { getCustomers } from '@/apis/customers/handlers';
+import { getUsers } from '@/apis/users/handlers';
 
 import UserDialog from './_components/UserDialog';
 import UserTable from './_components/UserTable';
 
-async function getUsers() {
+async function _getUsers() {
   'use server';
-  return (await wrappedFetchWithJWT<{ data: User[] }>(`${process.env.API_URL}/api/users/get`, { method: 'POST' })).data;
+  return (await getUsers()).data;
 }
 
-export default function UsersPage() {
+export default async function UsersPage() {
+  const customers = (await getCustomers()).data;
+
   return (
     <Box sx={{ height: '100%', minHeight: 0, display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
-      <UserDialog />
-      <UserTable getUsers={getUsers} />
+      <UserDialog customers={customers} />
+      <UserTable getUsers={_getUsers} customers={customers} />
     </Box>
   );
 }

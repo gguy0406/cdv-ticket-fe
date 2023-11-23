@@ -6,6 +6,8 @@ import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
+export const fetchCache = 'default-no-store';
+
 export const metadata: Metadata = {
   title: 'CDV Ticket',
   description: 'cdv ticket',

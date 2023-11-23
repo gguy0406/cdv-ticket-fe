@@ -13,6 +13,8 @@ export async function wrappedFetch<T>(input: RequestInfo, init?: RequestInit | u
   if (response.ok) {
     return data;
   } else {
+    console.error(data);
+
     const errorMessage = data instanceof Error ? data.message : 'Request failed';
 
     switch (response.status) {

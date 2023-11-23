@@ -6,7 +6,6 @@ const protectedRoutes = ['/users', '/customers', '/events'];
 
 export const authConfig = {
   providers: [],
-  session: { strategy: 'jwt' },
   pages: { signIn: loginRoute },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {

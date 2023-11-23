@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-import { authenticate } from '@/lib/actions';
+import { authenticate } from '../_lib/actions';
 
 export default function LoginForm() {
   const [state, dispatch] = useFormState(authenticate, undefined);
@@ -42,7 +42,7 @@ function LoginButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button fullWidth type="submit" aria-disabled={pending} variant="contained" sx={{ mt: 3, mb: 2 }}>
+    <Button fullWidth type="submit" variant="contained" aria-disabled={pending} sx={{ mt: 3, mb: 2 }}>
       Log In
     </Button>
   );

@@ -1,12 +1,5 @@
-import { object, string } from 'yup';
-
 import { BaseEntity } from './base-entity';
 import { Customer } from './customer';
-
-export const loginSchema = object({
-  username: string().required(),
-  password: string().required(),
-});
 
 export interface User extends BaseEntity {
   fullName: string;
@@ -24,12 +17,6 @@ export enum UserStatusEnum {
 }
 
 export interface Role {
-  id: number;
+  id: string;
   name?: string;
-}
-
-export interface LoginAPIResponse {
-  token: string;
-  tokenExpires: number;
-  user: User;
 }
