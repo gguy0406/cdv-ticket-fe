@@ -13,6 +13,8 @@ import TableRow from '@mui/material/TableRow';
 import { Customer } from '@/interfaces/customer';
 import { User, UserStatusEnum } from '@/interfaces/user';
 
+import UserAction from './UserAction';
+
 interface Props {
   customers: Customer[];
   getUsers: () => Promise<User[]>;
@@ -26,9 +28,10 @@ interface Row {
   status: string;
   customer: string | undefined;
   note: string | undefined;
+  user: User;
 }
 
-const columns: Array<{ id: keyof Row; label: string; minWidth: number }> = [
+const columns: Array<{ id: Exclude<keyof Row, 'user'>; label: string; minWidth: number }> = [
   { id: 'fullName', label: 'Name', minWidth: 170 },
   { id: 'username', label: 'Username', minWidth: 150 },
   { id: 'role', label: 'Role', minWidth: 150 },
@@ -37,7 +40,7 @@ const columns: Array<{ id: keyof Row; label: string; minWidth: number }> = [
   { id: 'note', label: 'Note', minWidth: 150 },
 ];
 
-export default function UserTableBody({ getUsers }: Props) {
+export default function UserTableBody({ customers, getUsers }: Props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rows, setRows] = useState<Row[]>([]);
@@ -47,6 +50,7 @@ export default function UserTableBody({ getUsers }: Props) {
     getUsers().then((users) => {
       setRows(
         users.map((user) => ({
+          user,
           id: user.id,
           fullName: user.fullName,
           username: user.username,
@@ -84,6 +88,7 @@ export default function UserTableBody({ getUsers }: Props) {
                   {column.label}
                 </TableCell>
               ))}
+              <TableCell style={{ width: 100 }}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -98,6 +103,9 @@ export default function UserTableBody({ getUsers }: Props) {
 
                     return <TableCell key={column.id}>{value || '--'}</TableCell>;
                   })}
+                  <TableCell style={{ width: 100 }}>
+                    <UserAction user={row.user} customers={customers} />
+                  </TableCell>
                 </TableRow>
               );
             })}

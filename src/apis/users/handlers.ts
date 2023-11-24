@@ -9,7 +9,7 @@ import { createUserSchema, updateUserSchema } from './schemas';
 const userRoute = `${BASE_URL}/api/users`;
 
 export type CreateUserDto = InferType<typeof createUserSchema>;
-export type updateUserSchema = InferType<typeof updateUserSchema>;
+export type UpdateUserDto = InferType<typeof updateUserSchema>;
 
 export function getUsers() {
   return wrappedFetchWithJWT<{ data: User[]; hasNextPage: boolean }>(`${userRoute}/get`, { method: 'POST' });
@@ -22,17 +22,30 @@ export function getUserDetail(id: string) {
 export function createUser(data: CreateUserDto) {
   return wrappedFetchWithJWT<void>(userRoute, {
     method: 'POST',
-    body: JSON.stringify({ ...data, role: { id: data.roleId }, customer: { id: data.customerId } }),
+    body: JSON.stringify(serializeUserData(data)),
   });
 }
 
-export function updateUser(id: string, data: updateUserSchema) {
+export function updateUser(id: string, data: UpdateUserDto) {
   return wrappedFetchWithJWT<void>(`${userRoute}/${id}`, {
     method: 'PATCH',
-    body: JSON.stringify({ ...data, role: { id: data.roleId }, customer: { id: data.customerId } }),
+    body: JSON.stringify(serializeUserData(data)),
   });
 }
 
 export function deleteUser(id: string) {
-  return wrappedFetchWithJWT<User>(`${userRoute}/${id}`, { method: 'DELETE' });
+  return wrappedFetchWithJWT<void>(`${userRoute}/${id}`, { method: 'DELETE' });
+}
+
+function serializeUserData(data: CreateUserDto | UpdateUserDto) {
+  const serializedData: any = data;
+
+  if (!serializedData.status) delete serializedData.status;
+  if (serializedData.roleId) serializedData.role = { id: serializedData.roleId };
+  if (serializedData.customerId) serializedData.customer = { id: serializedData.customerId };
+
+  delete serializedData.roleId;
+  delete serializedData.customerId;
+
+  return serializedData;
 }

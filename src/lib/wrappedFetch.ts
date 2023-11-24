@@ -8,19 +8,18 @@ function assignDefaultHeader(defaultHeader: HeadersInit, init: RequestInit = {})
 
 export async function wrappedFetch<T>(input: RequestInfo, init?: RequestInit | undefined): Promise<T> {
   const response = await fetch(input, assignDefaultHeader({ 'Content-Type': 'application/json' }, init));
-  const data: T = await response.json();
+  let data: T;
+
+  try {
+    data = await response.json();
+  } catch {}
 
   if (response.ok) {
-    return data;
+    return data!;
   } else {
-    console.error(data);
+    console.error(data!);
 
-    const errorMessage = data instanceof Error ? data.message : 'Request failed';
-
-    switch (response.status) {
-      default:
-        throw new Error(errorMessage);
-    }
+    throw data!;
   }
 }
 

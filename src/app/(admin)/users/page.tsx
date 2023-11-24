@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 import { getCustomers } from '@/apis/customers/handlers';
 import { getUsers } from '@/apis/users/handlers';
@@ -16,7 +17,7 @@ export default async function UsersPage() {
 
   return (
     <Box sx={{ height: '100%', minHeight: 0, display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
-      <UserDialog customers={customers} />
+      <UserDialog customers={customers} triggerBtn={<Button variant="outlined">New User</Button>} />
       <UserTable getUsers={_getUsers} customers={customers} />
     </Box>
   );

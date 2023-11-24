@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, useState } from 'react';
+import { ReactElement, cloneElement, useEffect, useRef, useState } from 'react';
 import { useFormState } from 'react-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -14,101 +14,125 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 
+import { createUser, updateUser } from '@/apis/users/actions';
 import { Customer } from '@/interfaces/customer';
 import { User, UserStatusEnum } from '@/interfaces/user';
 
-import { submitUser } from '../_lib/actions';
-
 interface Props {
+  triggerBtn: ReactElement;
   customers: Customer[];
+  user?: User;
 }
 
-type UserFormData = Partial<
-  Pick<User, 'fullName' | 'username' | 'password' | 'status'> & { roleId: number; customerId: string }
->;
-
-export default function UserDialog({ customers }: Props) {
+export default function UserDialog({ triggerBtn, customers, user }: Props) {
   const [open, setOpen] = useState(false);
-  const [state, dispatch] = useFormState(submitUser, undefined);
-  const [user, setUser] = useState<UserFormData>({
-    fullName: '',
-    username: '',
-    password: '',
-    status: UserStatusEnum.Active,
-  });
-
-  console.log(customers);
+  const [state, dispatch] = useFormState(user ? updateUser : createUser, undefined);
+  const nameInput = useRef<HTMLInputElement>(null);
 
   const handleClickOpen = () => {
     setOpen(true);
+    setTimeout(() => nameInput.current?.focus());
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleUserChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, key: keyof UserFormData) => {
-    setUser({ ...user, [key]: event.target.value });
-  };
+  useEffect(() => {
+    if (state?.statusCode === 200) handleClose();
+  }, [state]);
 
   return (
     <>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        New User
-      </Button>
+      {cloneElement(triggerBtn, { onClick: handleClickOpen })}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Create New User</DialogTitle>
+        <DialogTitle>{user ? 'Update User' : 'Create New User'}</DialogTitle>
         <DialogContent>
-          <Box component="form" id="createUserForm" action={dispatch}>
+          <Box
+            component="form"
+            id="createUserForm"
+            action={
+              user
+                ? function (payload: FormData) {
+                    payload.append('id', user.id);
+
+                    return dispatch(payload);
+                  }
+                : dispatch
+            }
+          >
             <TextField
               required
-              autoFocus
               fullWidth
               name="fullName"
-              autoComplete="full-name"
+              autoComplete="off"
+              defaultValue={user?.fullName}
               label="Full Name"
               margin="normal"
-              value={user.fullName}
-              onChange={(event) => handleUserChange(event, 'fullName')}
+              inputRef={nameInput}
             />
             <TextField
               required
               fullWidth
               name="username"
-              autoComplete="username"
+              autoComplete="off"
+              defaultValue={user?.username}
               label="Username"
               margin="normal"
-              value={user.username}
-              onChange={(event) => handleUserChange(event, 'username')}
             />
-            <TextField
-              required
-              fullWidth
-              name="password"
-              type="password"
-              label="Password"
-              margin="normal"
-              value={user.password}
-              onChange={(event) => handleUserChange(event, 'password')}
-            />
-            <FormControl required fullWidth margin="normal">
-              <InputLabel id="select-status-label">Status</InputLabel>
+            {!user && <TextField required fullWidth name="password" type="password" label="Password" margin="normal" />}
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="select-status-label" htmlFor="select-status">
+                Status
+              </InputLabel>
               <Select
                 labelId="select-status-label"
-                id="select-status"
-                value={user.status}
+                defaultValue={user?.status || ''}
                 label="Status"
-                onChange={(event) => setUser({ ...user, status: event.target.value as UserStatusEnum })}
+                inputProps={{ id: 'select-status', name: 'status' }}
               >
                 <MenuItem value={UserStatusEnum.Active}>Active</MenuItem>
                 <MenuItem value={UserStatusEnum.Inactive}>Inactive</MenuItem>
               </Select>
             </FormControl>
-            <Button type="submit">Create</Button>
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="select-role-label" htmlFor="select-role">
+                Role
+              </InputLabel>
+              <Select
+                labelId="select-role-label"
+                defaultValue={user?.role?.id || ''}
+                label="Status"
+                inputProps={{ id: 'select-role', name: 'roleId' }}
+              >
+                <MenuItem value="1">Admin</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="select-customer-label" htmlFor="select-customer">
+                Customer
+              </InputLabel>
+              <Select
+                labelId="select-customer-label"
+                defaultValue={user?.customer?.id || ''}
+                label="Customer"
+                disabled={!customers.length}
+                inputProps={{ id: 'select-customer', name: 'customerId' }}
+              >
+                {customers.map((customer) => (
+                  <MenuItem key={customer.id} value={customer.id}>
+                    {customer.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
-          {typeof state === 'string' && <div>{state}</div>}
+          {state?.message && <div className="text-red-500">{state.message}</div>}
         </DialogContent>
         <DialogActions>
+          <Button type="submit" form="createUserForm">
+            {user ? 'Update' : 'Create'}
+          </Button>
           <Button onClick={handleClose}>Cancel</Button>
         </DialogActions>
       </Dialog>
