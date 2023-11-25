@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-import { LoginDto, login } from '@/apis/auth/handlers';
+import { LoginDto, login } from '@/app/login/_actions';
 
 import { authConfig } from './auth.config';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,7 +17,7 @@ import UserAction from './UserAction';
 
 interface Props {
   customers: Customer[];
-  getUsers: () => Promise<User[]>;
+  users: User[];
 }
 
 interface Row {
@@ -40,29 +40,20 @@ const columns: Array<{ id: Exclude<keyof Row, 'user'>; label: string; minWidth: 
   { id: 'note', label: 'Note', minWidth: 150 },
 ];
 
-export default function UserTableBody({ customers, getUsers }: Props) {
+export default function UserTableBody({ customers, users }: Props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [rows, setRows] = useState<Row[]>([]);
-  const [isLoading, setLoading] = useState(true);
 
-  useEffect(() => {
-    getUsers().then((users) => {
-      setRows(
-        users.map((user) => ({
-          user,
-          id: user.id,
-          fullName: user.fullName,
-          username: user.username,
-          role: user.role?.name,
-          status: UserStatusEnum[user.status],
-          customer: user.customer?.name,
-          note: user.note,
-        }))
-      );
-      setLoading(false);
-    });
-  }, [getUsers]);
+  const rows: Row[] = users.map((user) => ({
+    user,
+    id: user.id,
+    fullName: user.fullName,
+    username: user.username,
+    role: user.role?.name,
+    status: UserStatusEnum[user.status],
+    customer: user.customer?.name,
+    note: user.note,
+  }));
 
   const handleChangePage = (_event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => {
     setPage(newPage);
@@ -73,7 +64,6 @@ export default function UserTableBody({ customers, getUsers }: Props) {
     setPage(0);
   };
 
-  if (isLoading) return <p>Loading...</p>;
   if (!rows.length) return <p>No user data</p>;
 
   return (

@@ -10,9 +10,10 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { FiMoreVertical } from 'react-icons/fi';
 
-import { deleteUser } from '@/apis/users/actions';
 import { Customer } from '@/interfaces/customer';
 import { User } from '@/interfaces/user';
+
+import { deleteUser } from '../_actions';
 
 import UserDialog from './UserDialog';
 
@@ -23,17 +24,9 @@ interface Props {
 
 export default function UserAction({ user, customers }: Props) {
   const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event: BaseSyntheticEvent) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleDeleteUser = () => {};
+  const [updateUserDialogOpen, setUpdateUserDialogOpen] = useState(false);
+  const [deleteUserDialogOpen, setDeleteUserDialogOpen] = useState(false);
+  const isMenuOpen = Boolean(anchorEl);
 
   return (
     <>
@@ -42,52 +35,56 @@ export default function UserAction({ user, customers }: Props) {
         aria-label="more-action"
         aria-haspopup="true"
         size="small"
-        aria-controls={open ? `basic-menu-${user.id}` : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
+        aria-controls={isMenuOpen ? `basic-menu-${user.id}` : undefined}
+        aria-expanded={isMenuOpen ? 'true' : undefined}
+        onClick={(event: BaseSyntheticEvent) => setAnchorEl(event.currentTarget)}
       >
         <FiMoreVertical />
       </IconButton>
       <Menu
         id={`basic-menu-${user.id}`}
         anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
+        open={isMenuOpen}
+        onClose={() => setAnchorEl(null)}
         MenuListProps={{ 'aria-labelledby': `basic-button-${user.id}` }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <UserDialog user={user} customers={customers} triggerBtn={<MenuItem>Edit</MenuItem>} />
-        <DialogDeleteConfirm userId={user.id} />
+        <MenuItem
+          onClick={() => {
+            setAnchorEl(null);
+            setUpdateUserDialogOpen(true);
+          }}
+        >
+          Edit
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setAnchorEl(null);
+            setDeleteUserDialogOpen(true);
+          }}
+        >
+          Delete
+        </MenuItem>
       </Menu>
-    </>
-  );
-}
-
-function DialogDeleteConfirm({ userId }: { userId: string }) {
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleOk = () => {
-    handleClose();
-    deleteUser(userId);
-  };
-
-  return (
-    <>
-      <MenuItem onClick={handleClickOpen}>Delete</MenuItem>
-      <Dialog open={open} onClose={handleClose}>
+      <UserDialog
+        open={updateUserDialogOpen}
+        user={user}
+        customers={customers}
+        handleClose={() => setUpdateUserDialogOpen(false)}
+      />
+      <Dialog open={deleteUserDialogOpen} onClose={() => setDeleteUserDialogOpen(false)}>
         <DialogTitle>Delete user confirmation</DialogTitle>
         <DialogActions>
-          <Button onClick={handleOk}>Ok</Button>
-          <Button autoFocus onClick={handleClose}>
+          <Button
+            onClick={() => {
+              setDeleteUserDialogOpen(false);
+              deleteUser(user.id);
+            }}
+          >
+            Ok
+          </Button>
+          <Button autoFocus onClick={() => setDeleteUserDialogOpen(false)}>
             Cancel
           </Button>
         </DialogActions>

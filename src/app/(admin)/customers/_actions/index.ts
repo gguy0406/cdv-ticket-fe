@@ -1,15 +1,33 @@
-import { InferType } from 'yup';
+import { InferType, mixed, object, string } from 'yup';
 
-import { Customer } from '@/interfaces/customer';
+import { Customer, CustomerStatusEnum } from '@/interfaces/customer';
 import { BASE_URL } from '@/lib/constants';
 import { wrappedFetchWithJWT } from '@/lib/wrappedFetch';
 
-import { createCustomerSchema, updateCustomerSchema } from './schemas';
+const createCustomerSchema = object({
+  name: string().required(),
+  taxNumber: string().required(),
+  email: string().email().required(),
+  phoneNumber: string().required(),
+  address: string().required(),
+  status: mixed<CustomerStatusEnum>().oneOf(Object.values(CustomerStatusEnum)).required(),
+  note: string(),
+});
+
+const updateCustomerSchema = object({
+  name: string(),
+  taxNumber: string(),
+  email: string().email(),
+  phoneNumber: string(),
+  address: string(),
+  status: mixed<CustomerStatusEnum>().oneOf(Object.values(CustomerStatusEnum)),
+  note: string(),
+});
 
 const customerRoute = `${BASE_URL}/api/customers`;
 
-export type CreateCustomerDto = InferType<typeof createCustomerSchema>;
-export type updateCustomerSchema = InferType<typeof updateCustomerSchema>;
+type CreateCustomerDto = InferType<typeof createCustomerSchema>;
+type updateCustomerSchema = InferType<typeof updateCustomerSchema>;
 
 export function getCustomers() {
   return wrappedFetchWithJWT<{ data: Customer[]; hasNextPage: boolean }>(`${customerRoute}/get`, { method: 'POST' });

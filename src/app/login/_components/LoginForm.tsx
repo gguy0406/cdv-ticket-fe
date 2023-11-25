@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-import { authenticate } from '@/apis/auth/actions';
+import { authenticate } from '../_actions';
 
 export default function LoginForm() {
   const [state, dispatch] = useFormState(authenticate, undefined);

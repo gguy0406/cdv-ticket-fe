@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactElement, cloneElement, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useFormState } from 'react-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -14,128 +14,121 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 
-import { createUser, updateUser } from '@/apis/users/actions';
 import { Customer } from '@/interfaces/customer';
 import { User, UserStatusEnum } from '@/interfaces/user';
 
+import { createUser, updateUser } from '../_actions';
+
 interface Props {
-  triggerBtn: ReactElement;
+  open: boolean;
   customers: Customer[];
+  handleClose: () => void;
   user?: User;
 }
 
-export default function UserDialog({ triggerBtn, customers, user }: Props) {
-  const [open, setOpen] = useState(false);
+export default function UserDialog({ open, customers, user, handleClose }: Props) {
   const [state, dispatch] = useFormState(user ? updateUser : createUser, undefined);
   const nameInput = useRef<HTMLInputElement>(null);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-    setTimeout(() => nameInput.current?.focus());
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   useEffect(() => {
     if (state?.statusCode === 200) handleClose();
-  }, [state]);
+  }, [state, handleClose]);
+
+  useEffect(() => {
+    open && setTimeout(() => nameInput.current?.focus());
+  }, [open]);
 
   return (
-    <>
-      {cloneElement(triggerBtn, { onClick: handleClickOpen })}
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{user ? 'Update User' : 'Create New User'}</DialogTitle>
-        <DialogContent>
-          <Box
-            component="form"
-            id="createUserForm"
-            action={
-              user
-                ? function (payload: FormData) {
-                    payload.append('id', user.id);
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>{user ? 'Update User' : 'Create New User'}</DialogTitle>
+      <DialogContent>
+        <Box
+          component="form"
+          id="createUserForm"
+          action={
+            user
+              ? function (payload: FormData) {
+                  payload.append('id', user.id);
 
-                    return dispatch(payload);
-                  }
-                : dispatch
-            }
-          >
-            <TextField
-              required
-              fullWidth
-              name="fullName"
-              autoComplete="off"
-              defaultValue={user?.fullName}
-              label="Full Name"
-              margin="normal"
-              inputRef={nameInput}
-            />
-            <TextField
-              required
-              fullWidth
-              name="username"
-              autoComplete="off"
-              defaultValue={user?.username}
-              label="Username"
-              margin="normal"
-            />
-            {!user && <TextField required fullWidth name="password" type="password" label="Password" margin="normal" />}
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="select-status-label" htmlFor="select-status">
-                Status
-              </InputLabel>
-              <Select
-                labelId="select-status-label"
-                defaultValue={user?.status || ''}
-                label="Status"
-                inputProps={{ id: 'select-status', name: 'status' }}
-              >
-                <MenuItem value={UserStatusEnum.Active}>Active</MenuItem>
-                <MenuItem value={UserStatusEnum.Inactive}>Inactive</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="select-role-label" htmlFor="select-role">
-                Role
-              </InputLabel>
-              <Select
-                labelId="select-role-label"
-                defaultValue={user?.role?.id || ''}
-                label="Status"
-                inputProps={{ id: 'select-role', name: 'roleId' }}
-              >
-                <MenuItem value="1">Admin</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="select-customer-label" htmlFor="select-customer">
-                Customer
-              </InputLabel>
-              <Select
-                labelId="select-customer-label"
-                defaultValue={user?.customer?.id || ''}
-                label="Customer"
-                disabled={!customers.length}
-                inputProps={{ id: 'select-customer', name: 'customerId' }}
-              >
-                {customers.map((customer) => (
-                  <MenuItem key={customer.id} value={customer.id}>
-                    {customer.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-          {state?.message && <div className="text-red-500">{state.message}</div>}
-        </DialogContent>
-        <DialogActions>
-          <Button type="submit" form="createUserForm">
-            {user ? 'Update' : 'Create'}
-          </Button>
-          <Button onClick={handleClose}>Cancel</Button>
-        </DialogActions>
-      </Dialog>
-    </>
+                  return dispatch(payload);
+                }
+              : dispatch
+          }
+        >
+          <TextField
+            required
+            fullWidth
+            name="fullName"
+            autoComplete="off"
+            defaultValue={user?.fullName}
+            label="Full Name"
+            margin="normal"
+            inputRef={nameInput}
+          />
+          <TextField
+            required
+            fullWidth
+            name="username"
+            autoComplete="off"
+            defaultValue={user?.username}
+            label="Username"
+            margin="normal"
+          />
+          {!user && <TextField required fullWidth name="password" type="password" label="Password" margin="normal" />}
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="select-status-label" htmlFor="select-status">
+              Status
+            </InputLabel>
+            <Select
+              labelId="select-status-label"
+              defaultValue={user?.status || ''}
+              label="Status"
+              inputProps={{ id: 'select-status', name: 'status' }}
+            >
+              <MenuItem value={UserStatusEnum.Active}>Active</MenuItem>
+              <MenuItem value={UserStatusEnum.Inactive}>Inactive</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="select-role-label" htmlFor="select-role">
+              Role
+            </InputLabel>
+            <Select
+              labelId="select-role-label"
+              defaultValue={user?.role?.id || ''}
+              label="Status"
+              inputProps={{ id: 'select-role', name: 'roleId' }}
+            >
+              <MenuItem value="1">Admin</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="select-customer-label" htmlFor="select-customer">
+              Customer
+            </InputLabel>
+            <Select
+              labelId="select-customer-label"
+              defaultValue={user?.customer?.id || ''}
+              label="Customer"
+              disabled={!customers.length}
+              inputProps={{ id: 'select-customer', name: 'customerId' }}
+            >
+              {customers.map((customer) => (
+                <MenuItem key={customer.id} value={customer.id}>
+                  {customer.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        {state?.message && <div className="text-red-500">{state.message}</div>}
+      </DialogContent>
+      <DialogActions>
+        <Button type="submit" form="createUserForm">
+          {user ? 'Update' : 'Create'}
+        </Button>
+        <Button onClick={handleClose}>Cancel</Button>
+      </DialogActions>
+    </Dialog>
   );
 }

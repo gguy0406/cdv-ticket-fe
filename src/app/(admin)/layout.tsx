@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 
-import Nav from '@/components/Nav';
+import Nav from '@/app/_components/Nav';
 
 import AdminList from './_components/AdminList';
 
@@ -11,6 +11,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <Nav />
       <Box component="main" sx={{ flexGrow: 1, minWidth: 0, display: 'flex' }}>
         <Drawer
+          component="aside"
           variant="permanent"
           anchor="left"
           sx={{
@@ -25,7 +26,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         >
           <AdminList />
         </Drawer>
-        <Box component="section" sx={{ flexGrow: 1 }}>
+        <Box
+          component="section"
+          sx={{
+            flexGrow: 1,
+            height: '100%',
+            minHeight: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'start',
+          }}
+        >
           {children}
         </Box>
       </Box>
