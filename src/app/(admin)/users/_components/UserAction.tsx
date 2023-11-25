@@ -11,7 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { FiMoreVertical } from 'react-icons/fi';
 
 import { Customer } from '@/interfaces/customer';
-import { User } from '@/interfaces/user';
+import { Role, User } from '@/interfaces/user';
 
 import { deleteUser } from '../_actions';
 
@@ -20,9 +20,10 @@ import UserDialog from './UserDialog';
 interface Props {
   user: User;
   customers: Customer[];
+  roles: Role[];
 }
 
-export default function UserAction({ user, customers }: Props) {
+export default function UserAction({ user, customers, roles }: Props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [updateUserDialogOpen, setUpdateUserDialogOpen] = useState(false);
   const [deleteUserDialogOpen, setDeleteUserDialogOpen] = useState(false);
@@ -71,6 +72,7 @@ export default function UserAction({ user, customers }: Props) {
         open={updateUserDialogOpen}
         user={user}
         customers={customers}
+        roles={roles}
         handleClose={() => setUpdateUserDialogOpen(false)}
       />
       <Dialog open={deleteUserDialogOpen} onClose={() => setDeleteUserDialogOpen(false)}>

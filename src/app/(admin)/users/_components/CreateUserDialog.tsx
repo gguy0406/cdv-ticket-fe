@@ -4,10 +4,16 @@ import { useState } from 'react';
 import Button from '@mui/material/Button';
 
 import { Customer } from '@/interfaces/customer';
+import { Role } from '@/interfaces/user';
 
 import UserDialog from './UserDialog';
 
-export default function CreateUserDialog({ customers }: { customers: Customer[] }) {
+interface Props {
+  customers: Customer[];
+  roles: Role[];
+}
+
+export default function CreateUserDialog({ customers, roles }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -15,7 +21,7 @@ export default function CreateUserDialog({ customers }: { customers: Customer[] 
       <Button variant="outlined" onClick={() => setOpen(true)}>
         New User
       </Button>
-      <UserDialog open={open} customers={customers} handleClose={() => setOpen(false)} />
+      <UserDialog open={open} customers={customers} roles={roles} handleClose={() => setOpen(false)} />
     </>
   );
 }

@@ -15,18 +15,19 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 
 import { Customer } from '@/interfaces/customer';
-import { User, UserStatusEnum } from '@/interfaces/user';
+import { Role, User, UserStatusEnum } from '@/interfaces/user';
 
 import { createUser, updateUser } from '../_actions';
 
 interface Props {
   open: boolean;
+  roles: Role[];
   customers: Customer[];
   handleClose: () => void;
   user?: User;
 }
 
-export default function UserDialog({ open, customers, user, handleClose }: Props) {
+export default function UserDialog({ open, roles, customers, user, handleClose }: Props) {
   const [state, dispatch] = useFormState(user ? updateUser : createUser, undefined);
   const nameInput = useRef<HTMLInputElement>(null);
 
@@ -95,11 +96,15 @@ export default function UserDialog({ open, customers, user, handleClose }: Props
             </InputLabel>
             <Select
               labelId="select-role-label"
-              defaultValue={user?.role?.id || ''}
+              defaultValue={(user?.role?.id && roles.find((role) => role.id === user.role!.id)?.id) || ''}
               label="Status"
               inputProps={{ id: 'select-role', name: 'roleId' }}
             >
-              <MenuItem value="1">Admin</MenuItem>
+              {roles.map((role) => (
+                <MenuItem key={role.id} value={role.id}>
+                  {role.name || '--'}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormControl fullWidth margin="normal">
@@ -108,7 +113,9 @@ export default function UserDialog({ open, customers, user, handleClose }: Props
             </InputLabel>
             <Select
               labelId="select-customer-label"
-              defaultValue={user?.customer?.id || ''}
+              defaultValue={
+                (user?.customer?.id && customers.find((customer) => customer.id === user.customer!.id)?.id) || ''
+              }
               label="Customer"
               disabled={!customers.length}
               inputProps={{ id: 'select-customer', name: 'customerId' }}

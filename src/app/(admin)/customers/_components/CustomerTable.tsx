@@ -9,51 +9,27 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
-import { Customer } from '@/interfaces/customer';
-import { Role, User, UserStatusEnum } from '@/interfaces/user';
+import { Customer, CustomerStatusEnum } from '@/interfaces/customer';
 
-import UserAction from './UserAction';
+// import UserAction from './UserAction';
 
 interface Props {
-  users: User[];
   customers: Customer[];
-  roles: Role[];
 }
 
-interface Row {
-  id: string;
-  fullName: string;
-  username: string;
-  role: string | undefined;
-  status: UserStatusEnum;
-  customer: string | undefined;
-  note: string | undefined;
-  user: User;
-}
-
-const columns: Array<{ id: Exclude<keyof Row, 'user'>; label: string; minWidth: number }> = [
-  { id: 'fullName', label: 'Name', minWidth: 170 },
-  { id: 'username', label: 'Username', minWidth: 150 },
-  { id: 'role', label: 'Role', minWidth: 150 },
+const columns: Array<{ id: keyof Customer; label: string; minWidth: number }> = [
+  { id: 'name', label: 'Name', minWidth: 170 },
+  { id: 'taxNumber', label: 'Tax number', minWidth: 150 },
+  { id: 'email', label: 'Email', minWidth: 150 },
+  { id: 'phoneNumber', label: 'Phone number', minWidth: 150 },
+  { id: 'address', label: 'Address', minWidth: 150 },
   { id: 'status', label: 'Status', minWidth: 150 },
-  { id: 'customer', label: 'Customer', minWidth: 150 },
   { id: 'note', label: 'Note', minWidth: 150 },
 ];
 
-export default function UserTableBody({ users, customers, roles }: Props) {
+export default function CustomersPage({ customers }: Props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
-
-  const rows: Row[] = users.map((user) => ({
-    user,
-    id: user.id,
-    fullName: user.fullName,
-    username: user.username,
-    role: user.role?.name,
-    status: UserStatusEnum[user.status],
-    customer: user.customer?.name,
-    note: user.note,
-  }));
 
   const handleChangePage = (_event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => {
     setPage(newPage);
@@ -64,7 +40,7 @@ export default function UserTableBody({ users, customers, roles }: Props) {
     setPage(0);
   };
 
-  if (!rows.length) return <p>No user data</p>;
+  if (!customers.length) return <p>No customer data</p>;
 
   return (
     <>
@@ -82,7 +58,7 @@ export default function UserTableBody({ users, customers, roles }: Props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+            {customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                   <TableCell align="right" style={{ width: 50 }}>
@@ -98,7 +74,7 @@ export default function UserTableBody({ users, customers, roles }: Props) {
                     );
                   })}
                   <TableCell style={{ width: 100 }}>
-                    <UserAction user={row.user} customers={customers} roles={roles} />
+                    {/* <UserAction user={row.user} customers={customers} roles={roles} /> */}
                   </TableCell>
                 </TableRow>
               );
@@ -108,7 +84,7 @@ export default function UserTableBody({ users, customers, roles }: Props) {
       </TableContainer>
       <TablePagination
         component="div"
-        count={rows.length}
+        count={customers.length}
         rowsPerPage={rowsPerPage}
         page={page}
         rowsPerPageOptions={[10, 25, 100]}

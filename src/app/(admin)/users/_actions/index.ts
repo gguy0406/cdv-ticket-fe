@@ -2,7 +2,7 @@
 
 import { InferType, mixed, object, string } from 'yup';
 
-import { User, UserStatusEnum } from '@/interfaces/user';
+import { Role, User, UserStatusEnum } from '@/interfaces/user';
 import { BASE_URL } from '@/lib/constants';
 import parseFormData from '@/lib/parseFormData';
 import { wrappedFetchWithJWT } from '@/lib/wrappedFetch';
@@ -89,6 +89,10 @@ export async function deleteUser(id: string) {
   } catch (error) {
     return error as HttpException;
   }
+}
+
+export async function getRoles() {
+  return wrappedFetchWithJWT<Role[]>(`${BASE_URL}/api/roles`, { method: 'GET' });
 }
 
 function serializeUserData(data: CreateUserDto | UpdateUserDto) {
