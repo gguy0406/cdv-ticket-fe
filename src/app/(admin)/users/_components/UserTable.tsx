@@ -42,7 +42,7 @@ const columns: Array<{ id: Exclude<keyof Row, 'user'>; label: string; minWidth: 
 
 export default function UserTableBody({ customers, users }: Props) {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
 
   const rows: Row[] = users.map((user) => ({
     user,
@@ -67,8 +67,8 @@ export default function UserTableBody({ customers, users }: Props) {
   if (!rows.length) return <p>No user data</p>;
 
   return (
-    <Box sx={{ width: '100%', flexShrink: 1, display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
-      <TableContainer sx={{ height: '100%' }}>
+    <>
+      <TableContainer>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
@@ -91,7 +91,11 @@ export default function UserTableBody({ customers, users }: Props) {
                   {columns.map((column) => {
                     const value = row[column.id];
 
-                    return <TableCell key={column.id}>{value || '--'}</TableCell>;
+                    return (
+                      <TableCell className="truncate" key={column.id} style={{ maxWidth: 300 }}>
+                        {value || '--'}
+                      </TableCell>
+                    );
                   })}
                   <TableCell style={{ width: 100 }}>
                     <UserAction user={row.user} customers={customers} />
@@ -110,8 +114,8 @@ export default function UserTableBody({ customers, users }: Props) {
         rowsPerPageOptions={[10, 25, 100]}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        sx={{ overflow: 'visible' }}
+        sx={{ alignSelf: 'end', overflow: 'visible' }}
       />
-    </Box>
+    </>
   );
 }

@@ -9,7 +9,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <>
       <Nav />
-      <Box component="main" sx={{ flexGrow: 1, minWidth: 0, display: 'flex' }}>
+      <Box component="main" sx={{ flexGrow: 1, minWidth: 0, minHeight: 0, display: 'flex' }}>
         <Drawer
           component="aside"
           variant="permanent"
@@ -30,7 +30,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           component="section"
           sx={{
             flexGrow: 1,
-            height: '100%',
+            minWidth: 0,
             minHeight: 0,
             display: 'flex',
             flexDirection: 'column',

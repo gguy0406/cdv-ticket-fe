@@ -120,6 +120,15 @@ export default function UserDialog({ open, customers, user, handleClose }: Props
               ))}
             </Select>
           </FormControl>
+          <TextField
+            multiline
+            fullWidth
+            name="note"
+            autoComplete="off"
+            defaultValue={user?.note}
+            label="Note"
+            margin="normal"
+          />
         </Box>
         {state?.message && <div className="text-red-500">{state.message}</div>}
       </DialogContent>

@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         component="body"
         className={inter.className}
         maxWidth={false}
-        sx={{ height: '100%', minHeight: 0, display: 'flex', flexDirection: 'column' }}
+        sx={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
       >
         {children}
       </Container>
