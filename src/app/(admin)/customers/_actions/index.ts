@@ -1,8 +1,11 @@
-import { InferType, mixed, object, string } from 'yup';
+'use server';
+
+import { mixed, object, string } from 'yup';
 
 import { Customer, CustomerStatusEnum } from '@/interfaces/customer';
 import { BASE_URL } from '@/lib/constants';
 import { wrappedFetchWithJWT } from '@/lib/wrappedFetch';
+import parseFormData from '@/lib/parseFormData';
 
 const createCustomerSchema = object({
   name: string().required(),
@@ -26,25 +29,63 @@ const updateCustomerSchema = object({
 
 const customerRoute = `${BASE_URL}/api/customers`;
 
-type CreateCustomerDto = InferType<typeof createCustomerSchema>;
-type updateCustomerSchema = InferType<typeof updateCustomerSchema>;
-
-export function getCustomers() {
+export async function getCustomers() {
   return wrappedFetchWithJWT<{ data: Customer[]; hasNextPage: boolean }>(`${customerRoute}/get`, { method: 'POST' });
 }
 
-export function getCustomerDetail(id: string) {
+export async function getCustomerDetail(id: string) {
   return wrappedFetchWithJWT<Customer>(`${customerRoute}/${id}`, { method: 'GET' });
 }
 
-export function createCustomer(data: CreateCustomerDto) {
-  return wrappedFetchWithJWT<void>(customerRoute, { method: 'POST', body: JSON.stringify(data) });
+export async function createCustomer(_prevState: HttpResponse | undefined, formData: FormData) {
+  const parsedData = parseFormData(createCustomerSchema, formData);
+
+  if (!parsedData.status) delete parsedData.status;
+
+  try {
+    await createCustomerSchema.validate(parsedData);
+  } catch (error) {
+    return { statusCode: 400, error: 'Bad Request', message: (error as Error).message } satisfies HttpResponse;
+  }
+
+  try {
+    await wrappedFetchWithJWT<void>(customerRoute, { method: 'POST', body: JSON.stringify(parsedData) });
+
+    return { statusCode: 200 } satisfies HttpResponse;
+  } catch (error) {
+    return error as HttpResponse;
+  }
 }
 
-export function updateCustomer(id: string, data: updateCustomerSchema) {
-  return wrappedFetchWithJWT<void>(`${customerRoute}/${id}`, { method: 'PATCH', body: JSON.stringify(data) });
+export async function updateCustomer(_prevState: HttpResponse | undefined, formData: FormData) {
+  const parsedData = parseFormData(updateCustomerSchema, formData);
+
+  if (!parsedData.status) delete parsedData.status;
+
+  try {
+    await updateCustomerSchema.validate(parsedData);
+  } catch (error) {
+    return { statusCode: 400, error: 'Bad Request', message: (error as Error).message } satisfies HttpResponse;
+  }
+
+  try {
+    await wrappedFetchWithJWT<void>(`${customerRoute}/${formData.get('id')}`, {
+      method: 'PATCH',
+      body: JSON.stringify(parsedData),
+    });
+
+    return { statusCode: 200 } satisfies HttpResponse;
+  } catch (error) {
+    return error as HttpResponse;
+  }
 }
 
-export function deleteCustomer(id: string) {
-  return wrappedFetchWithJWT<Customer>(`${customerRoute}/${id}`, { method: 'DELETE' });
+export async function deleteCustomer(id: string) {
+  try {
+    await wrappedFetchWithJWT<void>(`${customerRoute}/${id}`, { method: 'DELETE' });
+
+    return { statusCode: 200 } satisfies HttpResponse;
+  } catch (error) {
+    return error as HttpResponse;
+  }
 }

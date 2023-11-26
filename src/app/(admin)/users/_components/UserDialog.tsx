@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useFormState } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -28,12 +28,22 @@ interface Props {
 }
 
 export default function UserDialog({ open, roles, customers, user, handleClose }: Props) {
-  const [state, dispatch] = useFormState(user ? updateUser : createUser, undefined);
-  const nameInput = useRef<HTMLInputElement>(null);
+  const [state, dispatch] = useFormState(async function (state: HttpResponse | undefined, payload: FormData) {
+    let res: HttpResponse;
 
-  useEffect(() => {
-    if (state?.statusCode === 200) handleClose();
-  }, [state, handleClose]);
+    if (user) {
+      payload.append('id', user.id);
+      res = await updateUser(state, payload);
+    } else {
+      res = await createUser(state, payload);
+    }
+
+    if (res.statusCode === 200) handleClose();
+
+    return res;
+  }, undefined);
+
+  const nameInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     open && setTimeout(() => nameInput.current?.focus());
@@ -43,19 +53,7 @@ export default function UserDialog({ open, roles, customers, user, handleClose }
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>{user ? 'Update User' : 'Create New User'}</DialogTitle>
       <DialogContent>
-        <Box
-          component="form"
-          id="createUserForm"
-          action={
-            user
-              ? function (payload: FormData) {
-                  payload.append('id', user.id);
-
-                  return dispatch(payload);
-                }
-              : dispatch
-          }
-        >
+        <Box component="form" id="createUserForm" action={dispatch}>
           <TextField
             required
             fullWidth
@@ -86,8 +84,11 @@ export default function UserDialog({ open, roles, customers, user, handleClose }
               label="Status"
               inputProps={{ id: 'select-status', name: 'status' }}
             >
-              <MenuItem value={UserStatusEnum.Active}>Active</MenuItem>
-              <MenuItem value={UserStatusEnum.Inactive}>Inactive</MenuItem>
+              {Object.entries(UserStatusEnum).map(([key, value]) => (
+                <MenuItem key={value} value={value}>
+                  {key}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormControl fullWidth margin="normal">
@@ -140,11 +141,19 @@ export default function UserDialog({ open, roles, customers, user, handleClose }
         {state?.message && <div className="text-red-500">{state.message}</div>}
       </DialogContent>
       <DialogActions>
-        <Button type="submit" form="createUserForm">
-          {user ? 'Update' : 'Create'}
-        </Button>
+        <SubmitButton label={user ? 'Update' : 'Create'} />
         <Button onClick={handleClose}>Cancel</Button>
       </DialogActions>
     </Dialog>
+  );
+}
+
+function SubmitButton({ label }: { label: string }) {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" form="createUserForm" aria-disabled={pending}>
+      {label}
+    </Button>
   );
 }

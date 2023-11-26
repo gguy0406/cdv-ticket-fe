@@ -39,13 +39,13 @@ export async function getUserDetail(id: string) {
   return wrappedFetchWithJWT<User>(`${userRoute}/${id}`, { method: 'GET' });
 }
 
-export async function createUser(_prevState: HttpException | undefined, formData: FormData) {
+export async function createUser(_prevState: HttpResponse | undefined, formData: FormData) {
   const parsedData = parseFormData(createUserSchema, formData);
 
   try {
     await createUserSchema.validate(parsedData);
   } catch (error) {
-    return { statusCode: 400, error: 'Bad Request', message: (error as Error).message } satisfies HttpException;
+    return { statusCode: 400, error: 'Bad Request', message: (error as Error).message } satisfies HttpResponse;
   }
 
   try {
@@ -54,30 +54,30 @@ export async function createUser(_prevState: HttpException | undefined, formData
       body: JSON.stringify(serializeUserData(parsedData)),
     });
 
-    return { statusCode: 200 } satisfies HttpException;
+    return { statusCode: 200 } satisfies HttpResponse;
   } catch (error) {
-    return error as HttpException;
+    return error as HttpResponse;
   }
 }
 
-export async function updateUser(_prevState: HttpException | undefined, formData: FormData) {
+export async function updateUser(_prevState: HttpResponse | undefined, formData: FormData) {
   const parsedData = parseFormData(updateUserSchema, formData);
 
   try {
     await updateUserSchema.validate(parsedData);
   } catch (error) {
-    return { statusCode: 400, error: 'Bad Request', message: (error as Error).message } satisfies HttpException;
+    return { statusCode: 400, error: 'Bad Request', message: (error as Error).message } satisfies HttpResponse;
   }
 
   try {
     await wrappedFetchWithJWT<void>(`${userRoute}/${formData.get('id')}`, {
-      method: 'PATCH',
+      method: 'PUT',
       body: JSON.stringify(serializeUserData(parsedData)),
     });
 
-    return { statusCode: 200 } satisfies HttpException;
+    return { statusCode: 200 } satisfies HttpResponse;
   } catch (error) {
-    return error as HttpException;
+    return error as HttpResponse;
   }
 }
 
@@ -85,9 +85,9 @@ export async function deleteUser(id: string) {
   try {
     await wrappedFetchWithJWT<void>(`${userRoute}/${id}`, { method: 'DELETE' });
 
-    return { statusCode: 200 } satisfies HttpException;
+    return { statusCode: 200 } satisfies HttpResponse;
   } catch (error) {
-    return error as HttpException;
+    return error as HttpResponse;
   }
 }
 

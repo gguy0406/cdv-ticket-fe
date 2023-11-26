@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 
 import { Customer, CustomerStatusEnum } from '@/interfaces/customer';
 
-// import UserAction from './UserAction';
+import CustomerAction from './CustomerAction';
 
 interface Props {
   customers: Customer[];
@@ -58,14 +58,14 @@ export default function CustomersPage({ customers }: Props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+            {customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((customer, index) => {
               return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                <TableRow hover role="checkbox" tabIndex={-1} key={customer.id}>
                   <TableCell align="right" style={{ width: 50 }}>
                     {index + 1}
                   </TableCell>
                   {columns.map((column) => {
-                    const value = row[column.id];
+                    const value = customer[column.id];
 
                     return (
                       <TableCell className="truncate" key={column.id} style={{ maxWidth: 300 }}>
@@ -74,7 +74,7 @@ export default function CustomersPage({ customers }: Props) {
                     );
                   })}
                   <TableCell style={{ width: 100 }}>
-                    {/* <UserAction user={row.user} customers={customers} roles={roles} /> */}
+                    <CustomerAction customer={customer} />
                   </TableCell>
                 </TableRow>
               );

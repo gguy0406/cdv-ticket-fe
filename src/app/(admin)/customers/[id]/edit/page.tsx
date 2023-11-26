@@ -1,9 +1,12 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import CustomerForm from '../_components/CustomerForm';
+import CustomerForm from '../../_components/CustomerForm';
+import { getCustomerDetail } from '../../_actions';
 
-export default function NewCustomerPage() {
+export default async function EditCustomerPage({ params }: { params: { id: string } }) {
+  const customer = await getCustomerDetail(params.id);
+
   return (
     <Box
       sx={{
@@ -18,7 +21,7 @@ export default function NewCustomerPage() {
       <Typography component="h1" variant="h5">
         Create New Customer
       </Typography>
-      <CustomerForm />
+      <CustomerForm customer={customer} />
     </Box>
   );
 }
