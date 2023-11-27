@@ -70,7 +70,7 @@ export async function updateCustomer(_prevState: HttpResponse | undefined, formD
 
   try {
     await wrappedFetchWithJWT<void>(`${customerRoute}/${formData.get('id')}`, {
-      method: 'PATCH',
+      method: 'PUT',
       body: JSON.stringify(parsedData),
     });
 

@@ -6,10 +6,11 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Link from 'next/link';
 import { BaseSyntheticEvent, useState } from 'react';
-import { FiChevronDown, FiLogOut, FiSlack, FiUser, FiUsers } from 'react-icons/fi';
+import { FiChevronDown, FiLogOut, FiSettings, FiUser } from 'react-icons/fi';
 
 import { signOut } from '@/auth';
 import { User } from '@/interfaces/user';
+import { DEFAULT_USER_ROUTE } from '@/lib/constants';
 
 export default function AccountMenu({ user, logout }: { user: User; logout: typeof signOut }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -66,22 +67,12 @@ export default function AccountMenu({ user, logout }: { user: User; logout: type
           },
         }}
       >
-        {user.role?.name === 'System' && (
-          <Link href="/customer">
-            <MenuItem>
-              <ListItemIcon>
-                <FiSlack />
-              </ListItemIcon>
-              Customers
-            </MenuItem>
-          </Link>
-        )}
-        <Link href="/users">
+        <Link href={DEFAULT_USER_ROUTE[user.role?.name || 'User']}>
           <MenuItem>
             <ListItemIcon>
-              <FiUsers />
+              <FiSettings />
             </ListItemIcon>
-            Users
+            Setting
           </MenuItem>
         </Link>
         <MenuItem onClick={async () => await logout()}>

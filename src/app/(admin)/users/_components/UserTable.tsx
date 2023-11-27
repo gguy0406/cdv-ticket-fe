@@ -50,7 +50,7 @@ export default function UserTableBody({ users, customers, roles }: Props) {
     fullName: user.fullName,
     username: user.username,
     role: user.role?.name,
-    status: UserStatusEnum[user.status],
+    status: user.status,
     customer: user.customer?.name,
     note: user.note,
   }));

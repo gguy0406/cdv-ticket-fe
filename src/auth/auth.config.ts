@@ -1,14 +1,9 @@
 import type { NextAuthConfig } from 'next-auth';
 
-import { DEFAULT_USER_ROUTE } from '@/lib/constants';
-import { Role } from '@/interfaces/user';
+import { ALLOW_ACCESS_ROUTE, DEFAULT_USER_ROUTE } from '@/lib/constants';
 
 const loginRoute = '/login';
 const protectedRoutes = ['/users', '/customers', '/events'];
-const allowAccess: { [key: string]: (Role['name'] | undefined)[] } = {
-  '/users': ['System'],
-  '/customers': ['System', 'Admin'],
-};
 
 export const authConfig = {
   providers: [],
@@ -24,8 +19,8 @@ export const authConfig = {
         isLoggedIn &&
         (isOnLoginRoute ||
           (onProtectedRoute &&
-            allowAccess[onProtectedRoute] &&
-            !allowAccess[onProtectedRoute].includes(auth!.user.role?.name)))
+            ALLOW_ACCESS_ROUTE[onProtectedRoute] &&
+            !ALLOW_ACCESS_ROUTE[onProtectedRoute].includes(auth!.user.role?.name)))
       )
         return Response.redirect(new URL(DEFAULT_USER_ROUTE[auth!.user.role?.name || 'User'], nextUrl));
 

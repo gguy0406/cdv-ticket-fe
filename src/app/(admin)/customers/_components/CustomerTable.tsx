@@ -9,7 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { ChangeEvent, useState } from 'react';
 
-import { Customer, CustomerStatusEnum } from '@/interfaces/customer';
+import { Customer } from '@/interfaces/customer';
 
 import CustomerAction from './CustomerAction';
 
@@ -27,7 +27,7 @@ const columns: Array<{ id: keyof Customer; label: string; minWidth: number }> = 
   { id: 'note', label: 'Note', minWidth: 150 },
 ];
 
-export default function CustomersPage({ customers }: Props) {
+export default function CustomersTable({ customers }: Props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
 

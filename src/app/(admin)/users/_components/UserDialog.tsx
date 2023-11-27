@@ -97,13 +97,13 @@ export default function UserDialog({ open, roles, customers, user, handleClose }
             </InputLabel>
             <Select
               labelId="select-role-label"
-              defaultValue={(user?.role?.id && roles.find((role) => role.id === user.role!.id)?.id) || ''}
-              label="Status"
+              defaultValue={user?.role?.id || ''}
+              label="Role"
               inputProps={{ id: 'select-role', name: 'roleId' }}
             >
               {roles.map((role) => (
                 <MenuItem key={role.id} value={role.id}>
-                  {role.name || '--'}
+                  {role.name}
                 </MenuItem>
               ))}
             </Select>
