@@ -3,7 +3,7 @@ import type { NextAuthConfig } from 'next-auth';
 import { ALLOW_ACCESS_ROUTE, DEFAULT_USER_ROUTE } from '@/lib/constants';
 
 const loginRoute = '/login';
-const protectedRoutes = ['/users', '/customers', '/events'];
+const protectedRoutes = ['/customers', '/users', '/events'];
 
 export const authConfig = {
   providers: [],

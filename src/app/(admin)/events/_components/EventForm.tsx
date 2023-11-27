@@ -2,20 +2,21 @@
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { redirect } from 'next/navigation';
 import { useFormState, useFormStatus } from 'react-dom';
 
 import { Customer } from '@/interfaces/customer';
-import { CDVEvent, EventStatusEnum, EventType } from '@/interfaces/event';
+import { CDVEvent, EventType } from '@/interfaces/event';
 
 import { createEvent, updateEvent } from '../_actions';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import Chip from '@mui/material/Chip';
 
 interface Props {
   customers: Customer[];
@@ -40,84 +41,99 @@ export default function EventForm({ customers, eventTypes, event }: Props) {
   }, undefined);
 
   return (
-    <Box component="form" action={dispatch} sx={{ mt: 1 }}>
-      <TextField
-        required
-        autoFocus
-        fullWidth
-        name="name"
-        autoComplete="off"
-        defaultValue={event?.name}
-        label="Name"
-        margin="normal"
-      />
-      <TextField
-        required
-        fullWidth
-        name="location"
-        autoComplete="off"
-        defaultValue={event?.location}
-        label="Location"
-        margin="normal"
-      />
-      <TextField
-        required
-        fullWidth
-        name="description"
-        autoComplete="off"
-        defaultValue={event?.description}
-        label="Description"
-        margin="normal"
-      />
-      <FormControl fullWidth margin="normal">
-        <InputLabel id="select-type-label" htmlFor="select-type">
-          Type
-        </InputLabel>
-        <Select
-          multiple
-          labelId="select-type-label"
-          defaultValue={event?.type?.map((type) => type.id) || []}
-          input={<OutlinedInput id="select-type" label="Chip" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
+    <Box
+      sx={{
+        marginTop: 8,
+        marginX: 10,
+        width: 500,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <Typography component="h1" variant="h5">
+        {event ? 'Update Event' : 'Create New Event'}
+      </Typography>
+      <Box component="form" action={dispatch} sx={{ mt: 1 }}>
+        <TextField
+          required
+          autoFocus
+          fullWidth
+          name="name"
+          autoComplete="off"
+          defaultValue={event?.name}
+          label="Name"
+          margin="normal"
+        />
+        <TextField
+          required
+          fullWidth
+          name="location"
+          autoComplete="off"
+          defaultValue={event?.location}
+          label="Location"
+          margin="normal"
+        />
+        <TextField
+          required
+          fullWidth
+          name="description"
+          autoComplete="off"
+          defaultValue={event?.description}
+          label="Description"
+          margin="normal"
+        />
+        <FormControl fullWidth margin="normal">
+          <InputLabel id="select-type-label" htmlFor="select-type">
+            Type
+          </InputLabel>
+          <Select
+            multiple
+            labelId="select-type-label"
+            defaultValue={event?.type?.map((type) => type.id) || []}
+            input={<OutlinedInput id="select-type" label="Chip" />}
+            renderValue={(selected) => (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            )}
+          >
+            {[
+              { id: 1, name: 'Music' },
+              { id: 2, name: 'Contest' },
+            ].map((eventType) => (
+              <MenuItem key={eventType.id} value={eventType.id}>
+                {eventType.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        {!!customers?.length && (
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="select-customer-label" htmlFor="select-customer">
+              Customer
+            </InputLabel>
+            <Select
+              labelId="select-customer-label"
+              defaultValue={
+                (event?.customer?.id && customers.find((customer) => customer.id === event.customer!.id)?.id) || ''
+              }
+              label="Customer"
+              inputProps={{ id: 'select-customer', name: 'customerId' }}
+            >
+              {customers.map((customer) => (
+                <MenuItem key={customer.id} value={customer.id}>
+                  {customer.name}
+                </MenuItem>
               ))}
-            </Box>
-          )}
-        >
-          {[
-            { id: 1, name: 'Music' },
-            { id: 2, name: 'Contest' },
-          ].map((eventType) => (
-            <MenuItem key={eventType.id} value={eventType.id}>
-              {eventType.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <FormControl fullWidth margin="normal">
-        <InputLabel id="select-customer-label" htmlFor="select-customer">
-          Customer
-        </InputLabel>
-        <Select
-          labelId="select-customer-label"
-          defaultValue={
-            (event?.customer?.id && customers.find((customer) => customer.id === event.customer!.id)?.id) || ''
-          }
-          label="Customer"
-          disabled={!customers.length}
-          inputProps={{ id: 'select-customer', name: 'customerId' }}
-        >
-          {customers.map((customer) => (
-            <MenuItem key={customer.id} value={customer.id}>
-              {customer.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <SubmitButton label={event ? 'Update' : 'Create'} />
-      {state?.message && <div className="text-red-500">{state.message}</div>}
+            </Select>
+          </FormControl>
+        )}
+        <SubmitButton label={event ? 'Update' : 'Create'} />
+        {state?.message && <div className="text-red-500">{state.message}</div>}
+      </Box>
     </Box>
   );
 }

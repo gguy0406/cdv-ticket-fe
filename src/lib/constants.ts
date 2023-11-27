@@ -7,6 +7,6 @@ export const DEFAULT_USER_ROUTE: { [key in Role['name']]: string } = {
   User: '/events',
 };
 export const ALLOW_ACCESS_ROUTE: { [key: string]: (Role['name'] | undefined)[] } = {
-  '/users': ['System'],
-  '/customers': ['System', 'Admin'],
+  '/customers': ['System'],
+  '/users': ['System', 'Admin'],
 };

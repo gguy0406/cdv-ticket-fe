@@ -26,7 +26,7 @@ export default function AdminList({ user }: { user: User }) {
           </ListItemButton>
         </ListItem>
       )}
-      {ALLOW_ACCESS_ROUTE['/customers'].includes(user.role?.name) && (
+      {ALLOW_ACCESS_ROUTE['/users'].includes(user.role?.name) && (
         <ListItem disablePadding>
           <ListItemButton href="/users" selected={pathname === '/users'}>
             <ListItemIcon>

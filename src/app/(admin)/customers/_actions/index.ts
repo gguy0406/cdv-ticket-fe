@@ -6,6 +6,7 @@ import { Customer, CustomerStatusEnum } from '@/interfaces/customer';
 import { BASE_URL } from '@/lib/constants';
 import { wrappedFetchWithJWT } from '@/lib/wrappedFetch';
 import parseFormData from '@/lib/parseFormData';
+import { revalidatePath } from 'next/cache';
 
 const createCustomerSchema = object({
   name: string().required(),
@@ -73,6 +74,8 @@ export async function updateCustomer(_prevState: HttpResponse | undefined, formD
       method: 'PUT',
       body: JSON.stringify(parsedData),
     });
+
+    revalidatePath('/customers');
 
     return { statusCode: 200 } satisfies HttpResponse;
   } catch (error) {
