@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import CustomerForm from '../../_components/CustomerForm';
 import { getCustomerDetail } from '../../_actions';
+import CustomerForm from '../../_components/CustomerForm';
 
 export default async function EditCustomerPage({ params }: { params: { id: string } }) {
   const customer = await getCustomerDetail(params.id);

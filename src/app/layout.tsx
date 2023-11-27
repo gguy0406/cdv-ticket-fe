@@ -1,12 +1,10 @@
+import Container from '@mui/material/Container';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Container from '@mui/material/Container';
 
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
-
-export const fetchCache = 'default-no-store';
 
 export const metadata: Metadata = {
   title: 'CDV Ticket',

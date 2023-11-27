@@ -8,19 +8,23 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { FiSlack, FiUsers } from 'react-icons/fi';
 
-export default function AdminList() {
+import { User } from '@/interfaces/user';
+
+export default function AdminList({ user }: { user: User }) {
   const pathname = usePathname();
 
   return (
     <List>
-      <ListItem disablePadding>
-        <ListItemButton href="/customers" selected={pathname === '/customers'}>
-          <ListItemIcon>
-            <FiSlack />
-          </ListItemIcon>
-          <ListItemText primary="Customers" />
-        </ListItemButton>
-      </ListItem>
+      {user.role?.name === 'System' && (
+        <ListItem disablePadding>
+          <ListItemButton href="/customers" selected={pathname === '/customers'}>
+            <ListItemIcon>
+              <FiSlack />
+            </ListItemIcon>
+            <ListItemText primary="Customers" />
+          </ListItemButton>
+        </ListItem>
+      )}
       <ListItem disablePadding>
         <ListItemButton href="/users" selected={pathname === '/users'}>
           <ListItemIcon>

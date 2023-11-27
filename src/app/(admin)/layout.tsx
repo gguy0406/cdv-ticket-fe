@@ -2,10 +2,13 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 
 import Nav from '@/app/_components/Nav';
+import { auth } from '@/auth';
 
 import AdminList from './_components/AdminList';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+
   return (
     <>
       <Nav />
@@ -24,7 +27,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             },
           }}
         >
-          <AdminList />
+          <AdminList user={session!.user} />
         </Drawer>
         <Box
           component="section"

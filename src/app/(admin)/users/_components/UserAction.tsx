@@ -1,6 +1,5 @@
 'use client';
 
-import { BaseSyntheticEvent, useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -8,6 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { BaseSyntheticEvent, useState } from 'react';
 import { FiMoreVertical } from 'react-icons/fi';
 
 import { Customer } from '@/interfaces/customer';

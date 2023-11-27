@@ -1,5 +1,5 @@
-import NextAuth from 'next-auth';
 import { JWT } from '@auth/core/jwt';
+import NextAuth from 'next-auth';
 
 type AdapterUser = import('@/interfaces/user').User;
 

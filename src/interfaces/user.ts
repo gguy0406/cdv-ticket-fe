@@ -18,5 +18,5 @@ export enum UserStatusEnum {
 
 export interface Role {
   id: string;
-  name?: string;
+  name: 'System' | 'Admin' | 'User';
 }

@@ -1,8 +1,8 @@
-import Link from 'next/link';
-import Image from 'next/image';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
+import Link from 'next/link';
+import Image from 'next/image';
 
 import { auth, signOut } from '@/auth';
 

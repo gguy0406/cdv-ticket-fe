@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 
-import Nav from '@/app/_components/Nav';
+import Nav from './_components/Nav';
 
 export default function Home() {
   return (

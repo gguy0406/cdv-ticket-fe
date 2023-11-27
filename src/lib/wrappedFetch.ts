@@ -1,6 +1,7 @@
 import { auth } from '@/auth';
 
 function assignDefaultHeader(defaultHeader: HeadersInit, init: RequestInit = {}) {
+  // TODO: move into middleware
   init.headers = { ...defaultHeader, ...init.headers };
 
   return init;

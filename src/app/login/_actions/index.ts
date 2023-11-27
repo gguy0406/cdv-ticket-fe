@@ -13,7 +13,7 @@ const loginSchema = object({
   password: string().required(),
 });
 
-type LoginDto = InferType<typeof loginSchema>;
+export type LoginDto = InferType<typeof loginSchema>;
 
 export interface LoginAPIResponse {
   token: string;
