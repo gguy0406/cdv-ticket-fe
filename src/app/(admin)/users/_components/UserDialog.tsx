@@ -20,6 +20,7 @@ import { Role, User, UserStatusEnum } from '@/interfaces/user';
 import { createUser, updateUser } from '../_actions';
 
 interface Props {
+  hasSystemPermission: boolean;
   open: boolean;
   roles: Role[];
   customers: Customer[];
@@ -27,7 +28,7 @@ interface Props {
   user?: User;
 }
 
-export default function UserDialog({ open, roles, customers, user, handleClose }: Props) {
+export default function UserDialog({ hasSystemPermission, open, roles, customers, user, handleClose }: Props) {
   const [state, dispatch] = useFormState(async function (state: HttpResponse | undefined, payload: FormData) {
     let res: HttpResponse;
 
@@ -101,33 +102,36 @@ export default function UserDialog({ open, roles, customers, user, handleClose }
               label="Role"
               inputProps={{ id: 'select-role', name: 'roleId' }}
             >
-              {roles.map((role) => (
-                <MenuItem key={role.id} value={role.id}>
-                  {role.name}
-                </MenuItem>
-              ))}
+              {roles
+                .filter((role) => role.name !== 'System')
+                .map((role) => (
+                  <MenuItem key={role.id} value={role.id}>
+                    {role.name}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="select-customer-label" htmlFor="select-customer">
-              Customer
-            </InputLabel>
-            <Select
-              labelId="select-customer-label"
-              defaultValue={
-                (user?.customer?.id && customers.find((customer) => customer.id === user.customer!.id)?.id) || ''
-              }
-              label="Customer"
-              disabled={!customers.length}
-              inputProps={{ id: 'select-customer', name: 'customerId' }}
-            >
-              {customers.map((customer) => (
-                <MenuItem key={customer.id} value={customer.id}>
-                  {customer.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          {hasSystemPermission && (
+            <FormControl required fullWidth margin="normal">
+              <InputLabel id="select-customer-label" htmlFor="select-customer">
+                Customer
+              </InputLabel>
+              <Select
+                labelId="select-customer-label"
+                defaultValue={
+                  (user?.customer?.id && customers.find((customer) => customer.id === user.customer!.id)?.id) || ''
+                }
+                label="Customer"
+                inputProps={{ id: 'select-customer', name: 'customerId' }}
+              >
+                {customers.map((customer) => (
+                  <MenuItem key={customer.id} value={customer.id}>
+                    {customer.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
           <TextField
             multiline
             fullWidth

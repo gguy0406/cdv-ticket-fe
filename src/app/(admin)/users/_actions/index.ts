@@ -10,19 +10,19 @@ import { wrappedFetchWithJWT } from '@/lib/wrappedFetch';
 const createUserSchema = object({
   fullName: string().required(),
   username: string().required(),
-  password: string().required().min(6),
+  password: string().min(6).required(),
+  customerId: string(),
   status: mixed<UserStatusEnum | ''>().oneOf([...Object.values(UserStatusEnum), '']),
   roleId: string(),
-  customerId: string(),
   note: string(),
 });
 
 const updateUserSchema = object({
   fullName: string(),
   username: string(),
+  customerId: string(),
   status: mixed<UserStatusEnum | ''>().oneOf([...Object.values(UserStatusEnum), '']),
   roleId: string(),
-  customerId: string(),
   note: string(),
 });
 

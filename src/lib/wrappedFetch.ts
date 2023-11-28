@@ -1,7 +1,6 @@
-import { auth } from '@/auth';
+import { auth, signOut } from '@/auth';
 
 function assignDefaultHeader(defaultHeader: HeadersInit, init: RequestInit = {}) {
-  // TODO: move into middleware
   init.headers = { ...defaultHeader, ...init.headers };
 
   return init;
@@ -18,7 +17,7 @@ export async function wrappedFetch<T>(input: RequestInfo, init?: RequestInit | u
 
   if (response.ok) return data!;
 
-  console.error(data!);
+  console.error('wrappedFetch error', data!);
 
   throw data!;
 }
@@ -28,5 +27,13 @@ export async function wrappedFetchWithJWT<T>(input: RequestInfo, init?: RequestI
 
   if (!session) throw { statusCode: 401, error: 'Unauthorized' };
 
-  return wrappedFetch(input, assignDefaultHeader({ Authorization: `Bearer ${session.jwt.token}` }, init));
+  try {
+    return wrappedFetch<T>(input, assignDefaultHeader({ Authorization: `Bearer ${session.jwt.token}` }, init));
+  } catch (error) {
+    console.error('wrappedFetchWithJWT error', error);
+
+    if ((error as HttpResponse).statusCode === 401) await signOut();
+
+    throw error;
+  }
 }

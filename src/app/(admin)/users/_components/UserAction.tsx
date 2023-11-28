@@ -18,12 +18,13 @@ import { deleteUser } from '../_actions';
 import UserDialog from './UserDialog';
 
 interface Props {
+  hasSystemPermission: boolean;
   user: User;
   customers: Customer[];
   roles: Role[];
 }
 
-export default function UserAction({ user, customers, roles }: Props) {
+export default function UserAction({ hasSystemPermission, user, customers, roles }: Props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [updateUserDialogOpen, setUpdateUserDialogOpen] = useState(false);
   const [deleteUserDialogOpen, setDeleteUserDialogOpen] = useState(false);
@@ -69,6 +70,7 @@ export default function UserAction({ user, customers, roles }: Props) {
         </MenuItem>
       </Menu>
       <UserDialog
+        hasSystemPermission={hasSystemPermission}
         open={updateUserDialogOpen}
         user={user}
         customers={customers}

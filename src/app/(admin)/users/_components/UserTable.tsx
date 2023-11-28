@@ -15,6 +15,7 @@ import { Role, User, UserStatusEnum } from '@/interfaces/user';
 import UserAction from './UserAction';
 
 interface Props {
+  hasSystemPermission: boolean;
   users: User[];
   customers: Customer[];
   roles: Role[];
@@ -31,18 +32,17 @@ interface Row {
   user: User;
 }
 
-const columns: Array<{ id: Exclude<keyof Row, 'user'>; label: string; minWidth: number }> = [
-  { id: 'fullName', label: 'Name', minWidth: 170 },
-  { id: 'username', label: 'Username', minWidth: 150 },
-  { id: 'role', label: 'Role', minWidth: 150 },
-  { id: 'status', label: 'Status', minWidth: 150 },
-  { id: 'customer', label: 'Customer', minWidth: 150 },
-  { id: 'note', label: 'Note', minWidth: 150 },
-];
-
-export default function UserTableBody({ users, customers, roles }: Props) {
+export default function UserTableBody({ hasSystemPermission, users, customers, roles }: Props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
+
+  const columns: Array<{ id: Exclude<keyof Row, 'user'>; label: string; minWidth: number }> = [
+    { id: 'fullName', label: 'Name', minWidth: 170 },
+    { id: 'username', label: 'Username', minWidth: 150 },
+    { id: 'role', label: 'Role', minWidth: 150 },
+    { id: 'status', label: 'Status', minWidth: 150 },
+    { id: 'note', label: 'Note', minWidth: 150 },
+  ];
 
   const rows: Row[] = users.map((user) => ({
     user,
@@ -64,6 +64,7 @@ export default function UserTableBody({ users, customers, roles }: Props) {
     setPage(0);
   };
 
+  if (customers.length) columns.push({ id: 'customer', label: 'Customer', minWidth: 150 });
   if (!rows.length) return <p>No user data</p>;
 
   return (
@@ -98,7 +99,12 @@ export default function UserTableBody({ users, customers, roles }: Props) {
                     );
                   })}
                   <TableCell style={{ width: 100 }}>
-                    <UserAction user={row.user} customers={customers} roles={roles} />
+                    <UserAction
+                      hasSystemPermission={hasSystemPermission}
+                      user={row.user}
+                      customers={customers}
+                      roles={roles}
+                    />
                   </TableCell>
                 </TableRow>
               );

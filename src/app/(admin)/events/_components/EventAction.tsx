@@ -10,62 +10,62 @@ import MenuItem from '@mui/material/MenuItem';
 import { BaseSyntheticEvent, useState } from 'react';
 import { FiMoreVertical } from 'react-icons/fi';
 
-import { Customer } from '@/interfaces/customer';
+import { CDVEvent } from '@/interfaces/event';
 
-import { deleteCustomer } from '../_actions';
+import { deleteEvent } from '../_actions';
 import Link from 'next/link';
 
-export default function CustomerAction({ customer }: { customer: Customer }) {
+export default function EventAction({ event }: { event: CDVEvent }) {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [deleteCustomerDialogOpen, setDeleteCustomerDialogOpen] = useState(false);
+  const [deleteEventDialogOpen, setDeleteEventDialogOpen] = useState(false);
   const isMenuOpen = Boolean(anchorEl);
 
   return (
     <>
       <IconButton
-        id={`basic-button-${customer.id}`}
+        id={`basic-button-${event.id}`}
         aria-label="more-action"
         aria-haspopup="true"
         size="small"
-        aria-controls={isMenuOpen ? `basic-menu-${customer.id}` : undefined}
+        aria-controls={isMenuOpen ? `basic-menu-${event.id}` : undefined}
         aria-expanded={isMenuOpen ? 'true' : undefined}
         onClick={(event: BaseSyntheticEvent) => setAnchorEl(event.currentTarget)}
       >
         <FiMoreVertical />
       </IconButton>
       <Menu
-        id={`basic-menu-${customer.id}`}
+        id={`basic-menu-${event.id}`}
         anchorEl={anchorEl}
         open={isMenuOpen}
         onClose={() => setAnchorEl(null)}
-        MenuListProps={{ 'aria-labelledby': `basic-button-${customer.id}` }}
+        MenuListProps={{ 'aria-labelledby': `basic-button-${event.id}` }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <Link href={`/customers/${customer.id}/edit`}>
+        <Link href={`/events/${event.id}/edit`}>
           <MenuItem>Edit</MenuItem>
         </Link>
         <MenuItem
           onClick={() => {
             setAnchorEl(null);
-            setDeleteCustomerDialogOpen(true);
+            setDeleteEventDialogOpen(true);
           }}
         >
           Delete
         </MenuItem>
       </Menu>
-      <Dialog open={deleteCustomerDialogOpen} onClose={() => setDeleteCustomerDialogOpen(false)}>
-        <DialogTitle>Delete customer confirmation</DialogTitle>
+      <Dialog open={deleteEventDialogOpen} onClose={() => setDeleteEventDialogOpen(false)}>
+        <DialogTitle>Delete event confirmation</DialogTitle>
         <DialogActions>
           <Button
             onClick={() => {
-              setDeleteCustomerDialogOpen(false);
-              deleteCustomer(customer.id);
+              setDeleteEventDialogOpen(false);
+              deleteEvent(event.id);
             }}
           >
             Ok
           </Button>
-          <Button autoFocus onClick={() => setDeleteCustomerDialogOpen(false)}>
+          <Button autoFocus onClick={() => setDeleteEventDialogOpen(false)}>
             Cancel
           </Button>
         </DialogActions>

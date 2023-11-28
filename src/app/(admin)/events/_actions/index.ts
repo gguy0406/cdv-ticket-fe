@@ -4,7 +4,7 @@ import { array, number, object, string } from 'yup';
 
 import { CDVEvent, EventType } from '@/interfaces/event';
 import { BASE_URL } from '@/lib/constants';
-import { wrappedFetchWithJWT } from '@/lib/wrappedFetch';
+import { wrappedFetch, wrappedFetchWithJWT } from '@/lib/wrappedFetch';
 import parseFormData from '@/lib/parseFormData';
 
 const createEventSchema = object({

@@ -9,11 +9,12 @@ import { Role } from '@/interfaces/user';
 import UserDialog from './UserDialog';
 
 interface Props {
+  hasSystemPermission: boolean;
   customers: Customer[];
   roles: Role[];
 }
 
-export default function CreateUserDialog({ customers, roles }: Props) {
+export default function CreateUserDialog({ hasSystemPermission, customers, roles }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -21,7 +22,13 @@ export default function CreateUserDialog({ customers, roles }: Props) {
       <Button variant="outlined" onClick={() => setOpen(true)}>
         New User
       </Button>
-      <UserDialog open={open} customers={customers} roles={roles} handleClose={() => setOpen(false)} />
+      <UserDialog
+        hasSystemPermission={hasSystemPermission}
+        open={open}
+        customers={customers}
+        roles={roles}
+        handleClose={() => setOpen(false)}
+      />
     </>
   );
 }

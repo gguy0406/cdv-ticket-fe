@@ -12,6 +12,7 @@ export default async function UsersPage() {
   const session = await auth();
   const users = (await getUsers()).data;
   const roles = await getRoles();
+  const hasSystemPermission = session!.user.role?.name === 'System';
 
   let customers: Customer[] = [];
 
@@ -19,8 +20,8 @@ export default async function UsersPage() {
 
   return (
     <>
-      <CreateUserDialog customers={customers} roles={roles} />
-      <UserTable users={users} customers={customers} roles={roles} />
+      <CreateUserDialog hasSystemPermission={hasSystemPermission} customers={customers} roles={roles} />
+      <UserTable hasSystemPermission={hasSystemPermission} users={users} customers={customers} roles={roles} />
     </>
   );
 }
