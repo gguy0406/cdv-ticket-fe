@@ -96,7 +96,7 @@ export default function EventForm({ customers, eventTypes, event }: Props) {
             multiple
             labelId="select-type-label"
             defaultValue={event?.type?.map((type) => type.id) || []}
-            input={<OutlinedInput id="select-type" label="Chip" />}
+            input={<OutlinedInput id="select-type" label="Type" name="typeIds" />}
             renderValue={(selected) => (
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 {selected.map((value) => (

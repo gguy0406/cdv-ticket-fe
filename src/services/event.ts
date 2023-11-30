@@ -1,4 +1,4 @@
-import { InferType, array, number, object, string } from 'yup';
+import { InferType, array, object, string } from 'yup';
 
 import { CDVEvent, EventType } from '@/interfaces/event';
 import { BASE_URL } from '@/lib/constants';
@@ -13,7 +13,7 @@ export const createEventSchema = object({
   name: string().required(),
   location: string().required(),
   description: string().required(),
-  typeIds: array().of(number()),
+  typeIds: array().of(string()),
   logoId: string(),
   bannerId: string(),
   customerId: string(),
@@ -23,7 +23,7 @@ export const updateEventSchema = object({
   name: string(),
   location: string(),
   description: string(),
-  typeIds: array().of(number()),
+  typeIds: array().of(string()),
   logoId: string(),
   bannerId: string(),
   customerId: string(),

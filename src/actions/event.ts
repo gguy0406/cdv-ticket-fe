@@ -19,7 +19,8 @@ import {
 export async function createEvent(_prevState: HttpResponse | undefined, formData: FormData) {
   const parsedData = parseFormData(createEventSchema, formData);
 
-  if (!parsedData.status) delete parsedData.status;
+  if (parsedData.typeIds) parsedData.typeIds = parsedData.typeIds.split(',');
+  else delete parsedData.typeIds;
 
   const validationError = await wrappedValidateAction(createEventSchema.validate(parsedData));
 
@@ -31,7 +32,8 @@ export async function createEvent(_prevState: HttpResponse | undefined, formData
 export async function updateEvent(_prevState: HttpResponse | undefined, formData: FormData) {
   const parsedData = parseFormData(updateEventSchema, formData);
 
-  if (!parsedData.status) delete parsedData.status;
+  if (parsedData.typeIds) parsedData.typeIds = parsedData.typeIds.split(',');
+  else delete parsedData.typeIds;
 
   const validationError = await wrappedValidateAction(updateEventSchema.validate(parsedData));
 
@@ -48,6 +50,7 @@ export async function submitEvent(id: string) {
   const res = await wrappedFetchAction(submitEventService(id));
 
   if (res.statusCode === 200) revalidatePath('/events');
+  if (res.statusCode === 200) revalidatePath('/');
 
   return res;
 }
@@ -56,6 +59,7 @@ export async function approveEvent(id: string) {
   const res = await wrappedFetchAction(approveEventService(id));
 
   if (res.statusCode === 200) revalidatePath('/events');
+  if (res.statusCode === 200) revalidatePath('/');
 
   return res;
 }
