@@ -19,7 +19,7 @@ export enum EventStatusEnum {
 }
 
 export interface EventType {
-  id: number;
+  id: string;
   name: string;
 }
 

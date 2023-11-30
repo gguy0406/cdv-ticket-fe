@@ -1,4 +1,4 @@
-import CustomerForm from '../_components/CustomerForm';
+import CustomerForm from '../_components/customer-form';
 
 export default function NewCustomerPage() {
   return <CustomerForm />;

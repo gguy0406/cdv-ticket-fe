@@ -2,11 +2,10 @@ import { auth } from '@/auth';
 import { Customer } from '@/interfaces/customer';
 import { CDVEvent } from '@/interfaces/event';
 import { ALLOW_ACCESS_ROUTE } from '@/lib/constants';
+import { getCustomers } from '@/services/customers';
+import { getEventTypes } from '@/services/event';
 
-import { getCustomers } from '../../customers/_actions';
-
-import { getEventTypes } from '../_actions';
-import EventForm from '../_components/EventForm';
+import EventForm from './event-form';
 
 export default async function EventFormWrapper({ event }: { event?: CDVEvent }) {
   const session = await auth();

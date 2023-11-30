@@ -1,10 +1,10 @@
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 
-import Nav from '@/app/_components/Nav';
+import Nav from '@/app/_components/nav';
 import { auth } from '@/auth';
 
-import AdminList from './_components/AdminList';
+import AdminList from './_components/admin-list';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();

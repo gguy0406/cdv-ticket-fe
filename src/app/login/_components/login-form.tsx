@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { useFormState, useFormStatus } from 'react-dom';
 
-import { authenticate } from '../_actions';
+import { authenticate } from '@/actions/auth';
 
 export default function LoginForm() {
   const [state, dispatch] = useFormState(authenticate, undefined);

@@ -7,13 +7,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Link from 'next/link';
 import { BaseSyntheticEvent, useState } from 'react';
 import { FiMoreVertical } from 'react-icons/fi';
 
+import { deleteCustomer } from '@/actions/customers';
 import { Customer } from '@/interfaces/customer';
-
-import { deleteCustomer } from '../_actions';
-import Link from 'next/link';
 
 export default function CustomerAction({ customer }: { customer: Customer }) {
   const [anchorEl, setAnchorEl] = useState(null);

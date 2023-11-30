@@ -1,5 +1,5 @@
-import EventFormWrapper from '../_components/EventFormWrapper';
+import EventFormWrapper from '../_components/event-form-wrapper';
 
-export default async function NewCustomerPage() {
+export default async function NewEventPage() {
   return <EventFormWrapper />;
 }

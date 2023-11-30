@@ -10,12 +10,11 @@ import MenuItem from '@mui/material/MenuItem';
 import { BaseSyntheticEvent, useState } from 'react';
 import { FiMoreVertical } from 'react-icons/fi';
 
+import { deleteUser } from '@/actions/user';
 import { Customer } from '@/interfaces/customer';
 import { Role, User } from '@/interfaces/user';
 
-import { deleteUser } from '../_actions';
-
-import UserDialog from './UserDialog';
+import UserDialog from './user-dialog';
 
 interface Props {
   hasSystemPermission: boolean;

@@ -4,14 +4,9 @@ import Toolbar from '@mui/material/Toolbar';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import { auth, signOut } from '@/auth';
+import { auth } from '@/auth';
 
-import AccountMenu from './AccountMenu';
-
-async function logout() {
-  'use server';
-  return signOut();
-}
+import AccountMenu from './account-menu';
 
 export default async function Nav() {
   const session = await auth();
@@ -22,7 +17,7 @@ export default async function Nav() {
         <Link href="/">
           <Image src="/logo/logo.png" width={148} height={30} alt="CDV Ticket logo" priority={true} />
         </Link>
-        {session?.user ? <AccountMenu user={session.user} logout={logout} /> : <Button href="/login">Login</Button>}
+        {session?.user ? <AccountMenu user={session.user} /> : <Button href="/login">Login</Button>}
       </Toolbar>
     </AppBar>
   );

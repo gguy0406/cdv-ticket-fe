@@ -13,10 +13,9 @@ import Typography from '@mui/material/Typography';
 import { redirect } from 'next/navigation';
 import { useFormState, useFormStatus } from 'react-dom';
 
+import { createEvent, updateEvent } from '@/actions/event';
 import { Customer } from '@/interfaces/customer';
 import { CDVEvent, EventType } from '@/interfaces/event';
-
-import { createEvent, updateEvent } from '../_actions';
 
 interface Props {
   customers: Customer[];
@@ -39,6 +38,12 @@ export default function EventForm({ customers, eventTypes, event }: Props) {
 
     return res;
   }, undefined);
+
+  const eventTypesMap = eventTypes.reduce((map: Record<string, string>, eventType) => {
+    map[eventType.id] = eventType.name;
+
+    return map;
+  }, {});
 
   return (
     <Box
@@ -95,15 +100,12 @@ export default function EventForm({ customers, eventTypes, event }: Props) {
             renderValue={(selected) => (
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 {selected.map((value) => (
-                  <Chip key={value} label={value} />
+                  <Chip key={value} label={eventTypesMap[value]} />
                 ))}
               </Box>
             )}
           >
-            {[
-              { id: 1, name: 'Music' },
-              { id: 2, name: 'Contest' },
-            ].map((eventType) => (
+            {eventTypes.map((eventType) => (
               <MenuItem key={eventType.id} value={eventType.id}>
                 {eventType.name}
               </MenuItem>

@@ -1,12 +1,12 @@
 import { auth } from '@/auth';
 import { Customer } from '@/interfaces/customer';
 import { ALLOW_ACCESS_ROUTE } from '@/lib/constants';
+import { getCustomers } from '@/services/customers';
 
-import { getCustomers } from '../customers/_actions';
+import { getRoles, getUsers } from '@/services/user';
 
-import { getRoles, getUsers } from './_actions';
-import CreateUserDialog from './_components/CreateUserDialog';
-import UserTable from './_components/UserTable';
+import CreateUserDialog from './_components/create-user-dialog';
+import UserTable from './_components/user-table';
 
 export default async function UsersPage() {
   const session = await auth();

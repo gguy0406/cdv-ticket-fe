@@ -1,7 +1,8 @@
 import Button from '@mui/material/Button';
 
-import { getCustomers } from './_actions';
-import CustomerTable from './_components/CustomerTable';
+import { getCustomers } from '@/services/customers';
+
+import CustomerTable from './_components/customer-table';
 
 export default async function CustomersPage() {
   const customers = (await getCustomers()).data;

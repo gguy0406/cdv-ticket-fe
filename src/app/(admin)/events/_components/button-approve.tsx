@@ -2,9 +2,8 @@
 
 import Button from '@mui/material/Button';
 
+import { approveEvent } from '@/actions/event';
 import { CDVEvent } from '@/interfaces/event';
-
-import { approveEvent } from '../_actions';
 
 export default function ButtonApprove({ event }: { event: CDVEvent }) {
   return (

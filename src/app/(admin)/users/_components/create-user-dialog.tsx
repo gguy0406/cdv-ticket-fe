@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Customer } from '@/interfaces/customer';
 import { Role } from '@/interfaces/user';
 
-import UserDialog from './UserDialog';
+import UserDialog from './user-dialog';
 
 interface Props {
   hasSystemPermission: boolean;

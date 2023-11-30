@@ -11,7 +11,7 @@ import { ChangeEvent, useState } from 'react';
 
 import { Customer } from '@/interfaces/customer';
 
-import CustomerAction from './CustomerAction';
+import CustomerAction from './customer-action';
 
 interface Props {
   customers: Customer[];

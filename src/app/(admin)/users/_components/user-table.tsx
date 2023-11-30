@@ -12,7 +12,7 @@ import { ChangeEvent, useState } from 'react';
 import { Customer } from '@/interfaces/customer';
 import { Role, User, UserStatusEnum } from '@/interfaces/user';
 
-import UserAction from './UserAction';
+import UserAction from './user-action';
 
 interface Props {
   hasSystemPermission: boolean;

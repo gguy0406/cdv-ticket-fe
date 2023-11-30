@@ -17,23 +17,19 @@ export async function wrappedFetch<T>(input: RequestInfo, init?: RequestInit | u
 
   if (response.ok) return data!;
 
-  console.error('wrappedFetch error', data!);
+  console.error('wrappedFetch error');
 
-  throw data!;
+  throw new Error((data! as unknown as HttpResponse)?.message, { cause: data! });
 }
 
 export async function wrappedFetchWithJWT<T>(input: RequestInfo, init?: RequestInit | undefined): Promise<T> {
   const session = await auth();
 
-  if (!session) throw { statusCode: 401, error: 'Unauthorized' };
+  if (!session) {
+    console.error('wrappedFetchWithJWT error');
 
-  try {
-    return wrappedFetch<T>(input, assignDefaultHeader({ Authorization: `Bearer ${session.jwt.token}` }, init));
-  } catch (error) {
-    console.error('wrappedFetchWithJWT error', error);
-
-    if ((error as HttpResponse).statusCode === 401) await signOut();
-
-    throw error;
+    throw new Error('Unauthorized');
   }
+
+  return wrappedFetch<T>(input, assignDefaultHeader({ Authorization: `Bearer ${session.jwt.token}` }, init));
 }

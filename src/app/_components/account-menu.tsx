@@ -8,11 +8,11 @@ import Link from 'next/link';
 import { BaseSyntheticEvent, useState } from 'react';
 import { FiChevronDown, FiLogOut, FiSettings, FiUser } from 'react-icons/fi';
 
-import { signOut } from '@/auth';
+import { logout } from '@/actions/auth';
 import { User } from '@/interfaces/user';
 import { DEFAULT_USER_ROUTE } from '@/lib/constants';
 
-export default function AccountMenu({ user, logout }: { user: User; logout: typeof signOut }) {
+export default function AccountMenu({ user }: { user: User }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 

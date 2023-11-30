@@ -2,9 +2,8 @@
 
 import Button from '@mui/material/Button';
 
+import { submitEvent } from '@/actions/event';
 import { CDVEvent } from '@/interfaces/event';
-
-import { submitEvent } from '../_actions';
 
 export default function ButtonSubmit({ event }: { event: CDVEvent }) {
   return (

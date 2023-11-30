@@ -14,10 +14,9 @@ import TextField from '@mui/material/TextField';
 import { useEffect, useRef } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
+import { createUser, updateUser } from '@/actions/user';
 import { Customer } from '@/interfaces/customer';
 import { Role, User, UserStatusEnum } from '@/interfaces/user';
-
-import { createUser, updateUser } from '../_actions';
 
 interface Props {
   hasSystemPermission: boolean;
