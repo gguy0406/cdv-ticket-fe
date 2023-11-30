@@ -42,7 +42,6 @@ export default function EventList({ events }: Props) {
               title={
                 <Button
                   size="small"
-                  className="truncate"
                   endIcon={<FiExternalLink />}
                   onClick={() => {
                     setEvent(event);

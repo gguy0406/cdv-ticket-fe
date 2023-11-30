@@ -1,13 +1,18 @@
 import Box from '@mui/material/Box';
 
-import Nav from './_components/nav';
+import { getEvents } from '@/services/public-event';
 
-export default function Home() {
+import Nav from './_components/nav';
+import EventGrid from './_components/event-grid';
+
+export default async function Home() {
+  const events = (await getEvents()).data;
+
   return (
     <>
       <Nav />
       <Box component="main" sx={{ flexGrow: 1 }}>
-        Home page, event list, LP
+        {events?.length ? <EventGrid events={events} /> : <h1>Empty page</h1>}
       </Box>
     </>
   );

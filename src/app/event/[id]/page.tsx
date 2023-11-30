@@ -1,9 +1,9 @@
-// import { getEventDetail } from '@/app/(admin)/events/_actions';
-import EventDetail from '@/app/_components/EventDetail';
+import { getEventDetail } from '@/services/public-event';
+
+import EventDetail from '@/components/feature/event-detail';
 
 export default async function EventPage({ params: { id } }: { params: { id: string } }) {
-  // const event = await getEventDetail(id);
+  const event = await getEventDetail(id);
 
-  // <EventDetail event={event} />;
-  return null;
+  return <EventDetail event={event} />;
 }
