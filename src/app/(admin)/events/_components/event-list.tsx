@@ -11,7 +11,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { FiCalendar, FiExternalLink, FiMapPin, FiTv } from 'react-icons/fi';
 
 import EventDetail from '@/components/feature/event-detail';
@@ -24,6 +24,7 @@ import Link from '@mui/material/Link';
 import Chip from '@mui/material/Chip';
 import clsx from 'clsx';
 import Stack from '@mui/material/Stack';
+import { getBlobURL } from '@/lib/parse-form-data';
 
 interface Props {
   events: CDVEvent[];
@@ -42,7 +43,7 @@ export default function EventList({ events }: Props) {
           <Card key={event.id} sx={{ mt: 2, width: '100%', minWidth: 0, display: 'flex' }}>
             <CardHeader
               avatar={
-                <Avatar alt="event logo" src={`https://picsum.photos/id/${Math.ceil(Math.random() * 100)}/200/200`} />
+                <Avatar alt="event logo" src={getBlobURL(event.logo?.location)} />
               }
               action={<EventAction event={event} />}
               title={

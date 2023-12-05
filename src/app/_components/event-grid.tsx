@@ -1,4 +1,5 @@
 import { CDVEvent } from '@/interfaces/event';
+import { getBlobURL } from '@/lib/parse-form-data';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -17,11 +18,11 @@ export default function EventGrid({ events }: { events: CDVEvent[] }) {
             <CardMedia
               component="div"
               sx={{ pt: '56.25%' }}
-              image={`https://picsum.photos/id/${Math.ceil(Math.random() * 100)}/200/120`}
+              image={getBlobURL(event.banner?.location)}
             />
             <CardContent sx={{ flexGrow: 1 }}>
-              <Link variant="body2" href={`/event/${event.id}`}>
-                {event.name}
+              <Link variant="body2" href={`/event/${event.id}`} sx={{fontWeight: 'bold'}}>
+                {event.name.toUpperCase()}
               </Link>
               <Typography>{event.description}</Typography>
             </CardContent>
