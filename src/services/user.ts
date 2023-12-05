@@ -57,7 +57,7 @@ export async function getRoles() {
 }
 
 function serializeUserData(data: CreateUserDto | UpdateUserDto) {
-  const serializedData: any = data;
+  const serializedData: Record<string, any> = data;
 
   if (!serializedData.status) delete serializedData.status;
   if (serializedData.roleId) serializedData.role = { id: serializedData.roleId };

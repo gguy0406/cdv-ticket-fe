@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { redirect } from 'next/navigation';
 import { useFormState, useFormStatus } from 'react-dom';
 
-import { createCustomer, updateCustomer } from '@/actions/customers';
+import { createCustomer, updateCustomer } from '@/actions/customer';
 import { Customer, CustomerStatusEnum } from '@/interfaces/customer';
 
 export default function CustomerForm({ customer }: { customer?: Customer }) {

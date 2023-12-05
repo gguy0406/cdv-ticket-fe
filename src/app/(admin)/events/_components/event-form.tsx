@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import FormControl from '@mui/material/FormControl';
+import InputBase from '@mui/material/InputBase';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -11,11 +12,15 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { redirect } from 'next/navigation';
+import { ChangeEvent, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
 import { createEvent, updateEvent } from '@/actions/event';
+import { VisuallyHiddenInput } from '@/components/ui/hidden-input';
+import { CDVBlob } from '@/interfaces/blob';
 import { Customer } from '@/interfaces/customer';
 import { CDVEvent, EventType } from '@/interfaces/event';
+import { uploadBlob } from '@/services/blob';
 
 interface Props {
   customers: Customer[];
@@ -39,6 +44,9 @@ export default function EventForm({ customers, eventTypes, event }: Props) {
     return res;
   }, undefined);
 
+  const [logoId, setLogoId] = useState('');
+  const [bannerId, setBannerId] = useState('');
+
   const eventTypesMap = eventTypes.reduce((map: Record<string, string>, eventType) => {
     map[eventType.id] = eventType.name;
 
@@ -56,10 +64,14 @@ export default function EventForm({ customers, eventTypes, event }: Props) {
         alignItems: 'center',
       }}
     >
-      <Typography component="h1" variant="h5">
+      <Typography component="h1" variant="h5" sx={{ mb: 1 }}>
         {event ? 'Update Event' : 'Create New Event'}
       </Typography>
+      <UploadImage label="Upload banner" handleResponse={(blob) => setBannerId(blob.id)} />
+      <UploadImage label="Upload logo" handleResponse={(blob) => setLogoId(blob.id)} />
       <Box component="form" action={dispatch} sx={{ mt: 1 }}>
+        <VisuallyHiddenInput readOnly name="logoId" value={logoId} />
+        <VisuallyHiddenInput readOnly name="bannerId" value={bannerId} />
         <TextField
           required
           autoFocus
@@ -136,6 +148,36 @@ export default function EventForm({ customers, eventTypes, event }: Props) {
         <SubmitButton label={event ? 'Update' : 'Create'} />
         {state?.message && <div className="text-red-500">{state.message}</div>}
       </Box>
+    </Box>
+  );
+}
+
+function UploadImage({ label, handleResponse }: { label: string; handleResponse: (blob: CDVBlob) => void }) {
+  const [fileName, setFileName] = useState('');
+
+  return (
+    <Box sx={{ alignSelf: 'start', maxWidth: '100%', display: 'flex', alignItems: 'center' }}>
+      <Button component="label" sx={{ flexShrink: 0 }}>
+        <Typography noWrap>{label}</Typography>
+        <InputBase
+          type="file"
+          inputProps={{ accept: 'image/png, image/jpeg' }}
+          sx={{ display: 'none' }}
+          onChange={async (event: ChangeEvent<HTMLInputElement>) => {
+            if (!event.target.files?.[0]) return;
+
+            const formData = new FormData();
+
+            formData.append('file', event.target.files![0]);
+
+            const res = await uploadBlob(formData);
+
+            setFileName(res.location);
+            handleResponse(res);
+          }}
+        />
+      </Button>
+      <Typography noWrap>{fileName}</Typography>
     </Box>
   );
 }

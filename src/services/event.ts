@@ -38,11 +38,14 @@ export async function getEventDetail(id: string) {
 }
 
 export async function createEvent(data: CreateEventDto) {
-  return wrappedFetchWithJWT<void>(eventRoute, { method: 'POST', body: JSON.stringify(data) });
+  console.log(serializeEventData(data));
+  return wrappedFetchWithJWT<void>(eventRoute, { method: 'POST', body: JSON.stringify(serializeEventData(data)) });
 }
 
 export async function updateEvent(id: string, data: UpdateEventDto) {
-  return wrappedFetchWithJWT<void>(`${eventRoute}/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+  const body = JSON.stringify(serializeEventData(data));
+
+  return wrappedFetchWithJWT<void>(`${eventRoute}/${id}`, { method: 'PUT', body });
 }
 
 export async function submitEvent(id: string) {
@@ -59,4 +62,18 @@ export async function deleteEvent(id: string) {
 
 export async function getEventTypes() {
   return wrappedFetchWithJWT<EventType[]>(`${BASE_URL}/api/event-types`, { method: 'GET' });
+}
+
+function serializeEventData(data: CreateEventDto | UpdateEventDto) {
+  const serializedData: Record<string, any> = data;
+
+  if (serializedData.bannerId) serializedData.banner = { id: serializedData.bannerId };
+  if (serializedData.logoId) serializedData.logo = { id: serializedData.logoId };
+  if (serializedData.customerId) serializedData.customer = { id: serializedData.customerId };
+
+  delete serializedData.bannerId;
+  delete serializedData.logoId;
+  delete serializedData.customerId;
+
+  return serializedData;
 }

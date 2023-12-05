@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { BaseSyntheticEvent, useState } from 'react';
 import { FiMoreVertical } from 'react-icons/fi';
 
-import { deleteCustomer } from '@/actions/customers';
+import { deleteCustomer } from '@/actions/customer';
 import { Customer } from '@/interfaces/customer';
 
 export default function CustomerAction({ customer }: { customer: Customer }) {
