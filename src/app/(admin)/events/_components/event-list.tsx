@@ -41,9 +41,7 @@ export default function EventList({ events }: Props) {
         {events.map((event) => (
           <Card key={event.id} sx={{ mt: 2, width: '100%', minWidth: 0, display: 'flex' }}>
             <CardHeader
-              avatar={
-                <Avatar alt="event logo" src={`https://picsum.photos/id/${Math.ceil(Math.random() * 100)}/200/200`} />
-              }
+              avatar={<Avatar alt="event logo" src={event.logo?.location || '/event/default-logo.jpeg'} />}
               action={<EventAction event={event} />}
               title={
                 <Link

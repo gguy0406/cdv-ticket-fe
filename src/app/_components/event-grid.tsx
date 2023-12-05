@@ -17,7 +17,7 @@ export default function EventGrid({ events }: { events: CDVEvent[] }) {
             <CardMedia
               component="div"
               sx={{ pt: '56.25%' }}
-              image={`https://picsum.photos/id/${Math.ceil(Math.random() * 100)}/200/120`}
+              image={event.banner?.location || '/event/default-banner.jpeg'}
             />
             <CardContent sx={{ flexGrow: 1 }}>
               <Link variant="body2" href={`/event/${event.id}`}>
