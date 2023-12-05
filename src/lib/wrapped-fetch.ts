@@ -3,6 +3,8 @@ import { auth } from '@/auth';
 function assignDefaultHeader(defaultHeader: HeadersInit, init: RequestInit = {}) {
   init.headers = { ...defaultHeader, ...init.headers };
 
+  init.cache = 'no-cache';
+
   return init;
 }
 
