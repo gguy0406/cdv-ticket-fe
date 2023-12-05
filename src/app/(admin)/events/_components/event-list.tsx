@@ -53,8 +53,9 @@ export default function EventList({ events }: Props) {
                     setEvent(event);
                     setOpen(true);
                   }}
+                  sx={{ fontWeight: 'bold' }}
                 >
-                  {event.name}
+                  {event.name.toUpperCase()}
                 </Link>
               }
               subheader={
@@ -65,7 +66,7 @@ export default function EventList({ events }: Props) {
                   </Box>
                   <Box sx={{ mt: 0.25, display: 'flex', alignItems: 'center', minWidth: 0 }}>
                     <FiCalendar className="flex-shrink-0" />
-                    <span className="truncate ml-1">{event.createdAt}</span>
+                    <span className="truncate ml-1">{new Date(event.createdAt).toDateString()}</span>
                   </Box>
                   {!!event.customer && (
                     <Box sx={{ mt: 0.25, display: 'flex', alignItems: 'center', minWidth: 0 }}>
@@ -106,7 +107,6 @@ export default function EventList({ events }: Props) {
       </Box>
       <Dialog fullWidth maxWidth="xl" open={open} onClose={() => setOpen(false)}>
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span>{event?.name}</span>
           {(function () {
             switch (event?.status) {
               case EventStatusEnum.Draft:
